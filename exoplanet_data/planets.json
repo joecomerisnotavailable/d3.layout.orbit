@@ -1,67 +1,67 @@
 [
-    {
-      "key": "11 Com_b",
-      "star_name": "11 Com",
-      "planet_letter": "b",
-      "pl_pnum": 1,
-      "orbital_period": 326.03,
-      "radius": "NA",
-      "st_dist": 110.62,
-      "st_teff": 4742,
-      "st_mass": 2.7,
-      "st_rad": "19",
-      "rowupdate": "5/14/2014"
-    },
-    {
-      "key": "11 UMi_b",
-      "star_name": "11 UMi",
-      "planet_letter": "b",
-      "pl_pnum": 1,
-      "orbital_period": 516.22,
-      "radius": "NA",
-      "st_dist": 119.47,
-      "st_teff": 4340,
-      "st_mass": 1.8,
-      "st_rad": "24.08",
-      "rowupdate": "5/14/2014"
-    },
-    {
-      "key": "14 And_b",
-      "star_name": "14 And",
-      "planet_letter": "b",
-      "pl_pnum": 1,
-      "orbital_period": 185.84,
-      "radius": "NA",
-      "st_dist": 76.39,
-      "st_teff": 4813,
-      "st_mass": 2.2,
-      "st_rad": "11",
-      "rowupdate": "5/14/2014"
-    },
-    {
-      "key": "14 Her_b",
-      "star_name": "14 Her",
-      "planet_letter": "b",
-      "pl_pnum": 1,
-      "orbital_period": 1773.4,
-      "radius": "NA",
-      "st_dist": 18.15,
-      "st_teff": 5311,
-      "st_mass": 0.9,
-      "st_rad": "NA",
-      "rowupdate": "5/14/2014"
-    },
-    {
-      "key": "16 Cyg B_b",
-      "star_name": "16 Cyg B",
-      "planet_letter": "b",
-      "pl_pnum": 1,
-      "orbital_period": 798.5,
-      "radius": "NA",
-      "st_dist": 21.41,
-      "st_teff": 5674,
-      "st_mass": 0.99,
-      "st_rad": "NA",
-      "rowupdate": "9/10/2015"
-    }
-   ]
+  {
+    "key": "11 Com_b",
+    "star_name": "11 Com",
+    "planet_letter": "b",
+    "pl_pnum": 1,
+    "orbital_period": 326.03,
+    "radius": "NA",
+    "st_teff": 4742,
+    "st_mass": 2.7,
+    "st_rad": "19",
+    "rowupdate": "5/14/2014",
+    "light_years": 360.7937672
+  },
+  {
+    "key": "11 UMi_b",
+    "star_name": "11 UMi",
+    "planet_letter": "b",
+    "pl_pnum": 1,
+    "orbital_period": 516.22,
+    "radius": "NA",
+    "st_teff": 4340,
+    "st_mass": 1.8,
+    "st_rad": "24.08",
+    "rowupdate": "5/14/2014",
+    "light_years": 389.6585732
+  },
+  {
+    "key": "14 And_b",
+    "star_name": "14 And",
+    "planet_letter": "b",
+    "pl_pnum": 1,
+    "orbital_period": 185.84,
+    "radius": "NA",
+    "st_teff": 4813,
+    "st_mass": 2.2,
+    "st_rad": "11",
+    "rowupdate": "5/14/2014",
+    "light_years": 249.1505684
+  },
+  {
+    "key": "14 Her_b",
+    "star_name": "14 Her",
+    "planet_letter": "b",
+    "pl_pnum": 1,
+    "orbital_period": 1773.4,
+    "radius": "NA",
+    "st_teff": 5311,
+    "st_mass": 0.9,
+    "st_rad": "NA",
+    "rowupdate": "5/14/2014",
+    "light_years": 59.197314
+  },
+  {
+    "key": "16 Cyg B_b",
+    "star_name": "16 Cyg B",
+    "planet_letter": "b",
+    "pl_pnum": 1,
+    "orbital_period": 798.5,
+    "radius": "NA",
+    "st_teff": 5674,
+    "st_mass": 0.99,
+    "st_rad": "NA",
+    "rowupdate": "9/10/2015",
+    "light_years": 69.8299996
+  }
+ ]
