@@ -1,11 +1,18 @@
 [
   {
+    "key": "dummyfirst",
+    "star_name": "Sol",
+    "orbital_period": 1,
+    "radius": 10,
+    "light_years": 100    
+  },
+  {
     "key": "11 Com_b",
     "star_name": "11 Com",
     "planet_letter": "b",
     "pl_pnum": 1,
     "orbital_period": 1,
-    "radius": 2500,
+    "radius": 300,
     "st_teff": 4742,
     "st_mass": 2.7,
     "st_rad": "19",
