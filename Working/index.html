@@ -49,7 +49,8 @@ function drawOrbit(_data) {
   orbit = d3.layout.orbit().size([500,500])
   .children(function(d) {return d.values})
   .revolution(function(d) {return 1 / d.orbital_period})
-  .orbitSize(function(d) {return orbitScale(d.depth)})
+  .orbitSize(function(d) {return [d.light_years, d.light_years]})
+  .totallyrad(function(d) { return 1 * d.light_years})
   .speed(1)
   .mode("atomic")
   .nodes(_data);
@@ -62,7 +63,7 @@ function drawOrbit(_data) {
   .enter()
   .append("g")
   .attr("class", "node")
-  .attr("transform", function(d) {return "translate(" +d.x +"," + d.y+")"})
+  .attr("transform", function(d) {return "translate(" + d.x +"," + d.y+")"})
   .on("mouseover", nodeOver)
   .on("mouseout", nodeOut)
 
@@ -83,7 +84,7 @@ function drawOrbit(_data) {
   .enter()
   .insert("circle", "g")
   .attr("class", "ring")
-  .attr("r", function(d) {return d.r})
+  .attr("r", function(d) {return d.r}) // Ring size
   .attr("cx", function(d) {return d.x})
   .attr("cy", function(d) {return d.y})
 
@@ -94,7 +95,7 @@ function drawOrbit(_data) {
 
   orbit.on("tick", function() {
     d3.selectAll("g.node")
-      .attr("transform", function(d) {return "translate(" +d.x +"," + d.y+")"});
+      .attr("transform", function(d) {return "translate(" + d.x +"," + d.y +")"});
 
     d3.selectAll("circle.ring")
     .attr("cx", function(d) {return d.x})
@@ -125,8 +126,8 @@ function drawOrbit(_data) {
     .attr("class", "ring");
     
     d3.selectAll("circle.ring")
-    .attr("r", function(d) {return d.r})
-    .attr("cx", function(d) {return d.x})
+    .attr("r", function(d) {return d.r}) //Does nothing--related to moons, maybe?
+    .attr("cx", function(d) {return d.x })
     .attr("cy", function(d) {return d.y});
 
   }

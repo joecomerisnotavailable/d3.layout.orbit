@@ -11,6 +11,7 @@ d3.layout.orbit = function() {
     var orbitDepthAdjust = function() {return 2.95};
     var childrenAccessor = function(d) {return d.children};
     var tickRadianFunction = function() {return 1};
+    var orbitRadius = function() {return 1};
     var fixedOrbitArray = [99];
     var orbitMode = "flat";
 
@@ -48,8 +49,8 @@ d3.layout.orbit = function() {
 			currentTickStep++;
 			flattenedNodes.forEach(function(_node){
 				if (_node.parent) {
-					_node.x = _node.parent.x + ( (_node.ring) * Math.sin( _node.angle + (currentTickStep * tickRadianStep * tickRadianFunction(_node))) );
-					_node.y = _node.parent.y + ( (_node.ring) * Math.cos( _node.angle + (currentTickStep * tickRadianStep * tickRadianFunction(_node))) );
+					_node.x = _node.parent.x + ( orbitRadius(_node) * Math.sin( _node.angle + (currentTickStep * tickRadianStep * tickRadianFunction(_node))) );
+					_node.y = _node.parent.y + ( orbitRadius(_node) * Math.cos( _node.angle + (currentTickStep * tickRadianStep * tickRadianFunction(_node))) );
 				}
 			})
 			orbitalRings.forEach(function(_ring) {
@@ -83,6 +84,13 @@ d3.layout.orbit = function() {
 		//change ring size reduction (make that into dynamic function)
 		if (!arguments.length) return tickRadianFunction;
 		tickRadianFunction = _function;
+		return this
+	}
+
+	_orbitLayout.totallyrad = function(_function) {
+		//change ring size reduction (make that into dynamic function)
+		if (!arguments.length) return orbitRadius;
+		orbitRadius = _function;
 		return this
 	}
 
@@ -189,8 +197,8 @@ d3.layout.orbit = function() {
 						var _ring = {source: _node, x: _node.x, y: _node.y, r: _node.parent.ring / orbitDepthAdjust(_node) * (_currentRing / _rings)};
 					}
 					else {
-						var _ring = {source: _node, x: _node.x, y: _node.y, r: (orbitSize[0] / 2) * (_currentRing / _rings)};
-					}
+						var _ring = {source: _node, x: _node.x, y: _node.y, r: (orbitSize[0]/2) * (_currentRing / _rings)};
+					} // IT"S HERE!!!!!!!!!!!!!
 
 
 					var thisPie = d3.layout.pie().value(function(d) {return childrenAccessor(d) ? 4 : 1});
