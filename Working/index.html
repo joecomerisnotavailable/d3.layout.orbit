@@ -65,7 +65,7 @@ function drawOrbit(_data) {
 
   d3.selectAll("g.node")
   .append("circle")
-  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : radiusScale(d.radius) : 10 })
+  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 10 })
   .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
 
   // d3.select("#buttons").append("button").html("solar").on("click", function() {})
