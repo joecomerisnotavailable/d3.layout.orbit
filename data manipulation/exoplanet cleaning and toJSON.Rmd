@@ -27,6 +27,7 @@ dummy.row <- data.frame("loc_rowid" = 0, "key" = "dummy",  "star_name" = "dummy"
 planets <- rbind(dummy.row, planets)
 head(planets)
 write.csv(planets[1:10,2:ncol(planets)], "../exoplanet_data/5planets.csv", row.names = FALSE)
+write.csv(planets[,2:ncol(planets)], "../exoplanet_data/allplanets.csv", row.names = FALSE)
 ```
 ```{r}
 # how many planets do we know the radius of
