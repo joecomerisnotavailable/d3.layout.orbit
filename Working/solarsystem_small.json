@@ -1,0 +1,27 @@
+[
+    {
+    	"key": "Venus",
+    	"orbital_period": "-0.61519726",
+        "orbit_r": "25",
+    	"radius": 6051.59
+    	},
+    {
+        "key": "Earth",
+    	"orbital_period": "1",
+        "orbit_r": 75,
+    	"radius": 6378.1,        
+        "values": [
+            {
+                "order": "1",
+                "label": "Moon",
+                "radius": 1737.1,
+                "distance": "384399",
+                "orbital_period": "27.321582",
+                "discovery_year": "-9999",
+                "discoverer": "�",
+                "type": "Synchronous rotation",
+                "planet": "Earth"
+            }
+        ]
+    }
+]
