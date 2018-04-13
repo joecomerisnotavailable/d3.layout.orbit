@@ -34,7 +34,7 @@
 
 function makeViz() {
 
-  d3.json("solarsystem_small.json", function(data) {drawOrbit(data)});
+  d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
 
 }
 
@@ -83,7 +83,7 @@ function drawOrbit(_data) {
   .enter()
   .insert("circle", "g")
   .attr("class", "ring")
-  .attr("r", function(d) {return d.r})
+  .attr("r", function(d) {return d.r*100})
   .attr("cx", function(d) {return d.x})
   .attr("cy", function(d) {return d.y})
 
