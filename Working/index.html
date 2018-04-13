@@ -39,7 +39,7 @@ function drawOrbit(_data) {
   .children(function(d) {return d.values})
   .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
   .orbitSize(function(d) {return [d.light_years, d.light_years]})
-  .totallyrad(function(d) { return 1 * d.light_years})
+  .totallyrad(function(d) { return 1 * Math.log(d.light_years)*50})
   .speed(1)
   .mode("atomic")
   .nodes(_data);
@@ -58,7 +58,7 @@ function drawOrbit(_data) {
 
   d3.selectAll("g.node")
   .append("circle")
-  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : radiusScale(d.radius) : 20 })
+  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : radiusScale(d.radius) : 10 })
   .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
 
   // d3.select("#buttons").append("button").html("solar").on("click", function() {})
