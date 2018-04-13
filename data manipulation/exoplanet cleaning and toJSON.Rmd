@@ -1,0 +1,28 @@
+---
+title: "Manipulating the Exoplanet Data"
+author: "Kevin Hunt"
+date: "April 13, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyr)
+```
+
+## Read in planet csv, grab a few, and convert to JSON
+
+```{r cars}
+planets <- read.csv("planets_filtered_columns.csv", stringsAsFactors = FALSE)
+planets <- unite(planets, key, c(star_name, planet_letter), remove=FALSE)
+# covert parsecs to lightyears *design decision*
+planets$light_years <- 3.26156*planets$st_dist
+planets <- subset(planets, select = -(st_dist))
+head(planets)
+write.csv(planets[1:5,2:ncol(planets)], "5planets.csv", row.names = FALSE)
+```
+```{r}
+# how many planets do we know the radius of
+nrow(planets[!is.na(planets$radius),]) / nrow(planets)
+```
+
