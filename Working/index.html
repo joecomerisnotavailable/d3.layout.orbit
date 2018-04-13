@@ -37,7 +37,7 @@ function drawOrbit(_data) {
 
   orbit = d3.layout.orbit().size([700,700])
   .children(function(d) {return d.values})
-  .revolution(function(d) {return d.orbital_period == "NA" ? 1 : 1 / d.orbital_period})
+  .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
   .orbitSize(function(d) {return [d.light_years, d.light_years]})
   .totallyrad(function(d) { return 1 * d.light_years})
   .speed(1)
@@ -58,7 +58,7 @@ function drawOrbit(_data) {
 
   d3.selectAll("g.node")
   .append("circle")
-  .attr("r", function(d) {return d.radius ? radiusScale(d.radius) : 20})
+  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : radiusScale(d.radius) : 20 })
   .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
 
   // d3.select("#buttons").append("button").html("solar").on("click", function() {})

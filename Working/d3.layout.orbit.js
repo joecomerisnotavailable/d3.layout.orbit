@@ -154,7 +154,7 @@ d3.layout.orbit = function() {
 
 						flattenedNodes.push(childrenAccessor(_node)[x]);
 					}
-
+					// orbitalRings.push(_ring);
 					y+=ringSize;
 				}
 

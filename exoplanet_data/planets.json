@@ -1,74 +1,80 @@
 [
   {
-    "key": "dummyfirst",
-    "star_name": "Sol",
+    "key": "dummy",
+    "star_name": "dummy",
+    "planet_letter": "n",
+    "pl_pnum": 1,
     "orbital_period": 1,
-    "radius": 10,
-    "light_years": 100    
+    "radius": "1",
+    "st_teff": 1,
+    "st_mass": 1,
+    "st_rad": "1",
+    "rowupdate": "5/10/1778",
+    "light_years": 0
   },
   {
     "key": "11 Com_b",
     "star_name": "11 Com",
     "planet_letter": "b",
     "pl_pnum": 1,
-    "orbital_period": 1,
-    "radius": 300,
+    "orbital_period": 326.03,
+    "radius": "NA",
     "st_teff": 4742,
     "st_mass": 2.7,
-    "st_rad": "19",
+    "st_rad": "NA",
     "rowupdate": "5/14/2014",
-    "light_years": 100
+    "light_years": 360.7937672
   },
   {
     "key": "11 UMi_b",
     "star_name": "11 UMi",
     "planet_letter": "b",
     "pl_pnum": 1,
-    "orbital_period": 5,
-    "radius": 9001,
+    "orbital_period": 516.22,
+    "radius": "NA",
     "st_teff": 4340,
     "st_mass": 1.8,
-    "st_rad": "24.08",
+    "st_rad": "NA",
     "rowupdate": "5/14/2014",
-    "light_years": 250
+    "light_years": 389.6585732
   },
   {
     "key": "14 And_b",
     "star_name": "14 And",
     "planet_letter": "b",
     "pl_pnum": 1,
-    "orbital_period": 3,
+    "orbital_period": 185.84,
     "radius": "NA",
     "st_teff": 4813,
     "st_mass": 2.2,
-    "st_rad": "11",
+    "st_rad": "NA",
     "rowupdate": "5/14/2014",
-    "light_years": 400
+    "light_years": 249.1505684
   },
   {
     "key": "14 Her_b",
     "star_name": "14 Her",
     "planet_letter": "b",
     "pl_pnum": 1,
-    "orbital_period": 6,
-    "radius": 2000,
+    "orbital_period": 1773.4,
+    "radius": "NA",
     "st_teff": 5311,
     "st_mass": 0.9,
     "st_rad": "NA",
     "rowupdate": "5/14/2014",
-    "light_years": 309
+    "light_years": 59.197314
   },
   {
     "key": "16 Cyg B_b",
     "star_name": "16 Cyg B",
     "planet_letter": "b",
     "pl_pnum": 1,
-    "orbital_period": 7,
-    "radius": 6000,
+    "orbital_period": 798.5,
+    "radius": "NA",
     "st_teff": 5674,
     "st_mass": 0.99,
     "st_rad": "NA",
     "rowupdate": "9/10/2015",
-    "light_years": 350
+    "light_years": 69.8299996
   }
  ]
