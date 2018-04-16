@@ -1,5 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <link href="exoplanets.css" type="text/css" rel="stylesheet">
   <title>Orbit Layout Modes</title>
   <meta charset="utf-8" />
 </head>
@@ -31,7 +32,7 @@ function makeViz() {
 }
 
 // 3718 is the number of planets in the JSON file
-var randoms = Array(3718);
+var randoms = Array(3719);
 for(var i = 0; i < randoms.length; i++){
   randoms[i] = Math.random()*0.25 + 0.25;
 }
@@ -46,7 +47,7 @@ function drawOrbit(_data) {
   //.revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
   .revolution(function(d) {return randoms[d.FIELD1]})
   .orbitSize(function(d) {return [d.light_years, d.light_years]})
-  .totallyrad(function(d) { return 1 * Math.log(d.light_years)*50-25})
+  .totallyrad(function(d) { return isNaN(d.light_years) ? 550 : 1 * Math.log(d.light_years)*50})
   .speed(1)
   .mode("atomic")
   .nodes(_data);
@@ -59,20 +60,22 @@ function drawOrbit(_data) {
   .enter()
   .append("g")
   .attr("class", "node")
-  .attr("transform", function(d) {return "translate(" + d.x +"," + d.y+")"})
+  //.attr("transform", function(d) {return "translate(" + d.x +"," + d.y+")"})
   .on("mouseover", nodeOver)
   .on("mouseout", nodeOut)
 
   d3.selectAll("g.node")
   .append("circle")
-  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 10 })
+  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 2 })
   .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
 
   // d3.select("#buttons").append("button").html("solar").on("click", function() {})
 
   orbit.on("tick", function() {
-    d3.selectAll("g.node")
-      .attr("transform", function(d) {return "translate(" + d.x +"," + d.y +")"});
+    
+
+    d3.selectAll("g.node").attr("transform", function(d) {
+      return "translate(" + d.x +"," + d.y +")"});
   });
 
   orbit.start();
@@ -89,11 +92,14 @@ function drawOrbit(_data) {
 }
 
 </script>
-<body onload="makeViz()" style="background-color:black;">
-<div id="viz"><svg></svg><div id="buttons"></div></div>
-<footer>
-<script src="../src/d3.min.js"></script>
-<script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
-</footer>
+<body onload=makeViz() style="background-color:black;">
+    <!-- <div class="stars"></div> -->
+    <!-- <div class="twinkling"></div> -->
+ 
+    <div id="viz"><svg></svg><div id="buttons"></div></div>
+  <footer>
+    <script src="../src/d3.min.js"></script>
+    <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
+  </footer>
 </body>
 </html>
