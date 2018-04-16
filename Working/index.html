@@ -1,105 +1,105 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <link href="exoplanets.css" type="text/css" rel="stylesheet">
-  <title>Orbit Layout Modes</title>
-  <meta charset="utf-8" />
-</head>
-<style>
+  <head>
+    <link href="exoplanets.css" type="text/css" rel="stylesheet">
+    <title>Orbit Layout Modes</title>
+    <meta charset="utf-8" />
+  </head>
+  <style>
+    #viz, svg {
+      position: relative;
+      width: 1000px;
+      height: 1000px;
+      z-index: 2;
+    }
 
+    text {
+      pointer-events: none;
+    }
+
+    #buttons {
+      position: absolute;
+      top:0;
+      left:0;
+    }  
+  </style>
+  <script>
+
+    function makeViz() {
+      d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
+    }
+
+    // 3718 is the number of planets in the JSON file
+    var randoms = Array(3719); // for planet speeds
+    var spanrandoms = Array(3719); // for NaN lightyears to create a span of the ring
+    for(var i = 0; i < randoms.length; i++){
+      randoms[i] = Math.random()*0.15 + 0.15;
+      spanrandoms[i] = Math.random()*0.25 + 0.25;
+    }
+
+    function drawOrbit(_data) {
+
+      orbitScale = d3.scale.linear().domain([1, 3]).range([3.8, 1.5]).clamp(true);
+      radiusScale = d3.scale.linear().domain([210.64,2500,10000,71492.68]).range([2,4,8,16]);
+
+      orbit = d3.layout.orbit().size([700,700])
+      .children(function(d) {return d.values})
+      // use random to set orbital speed since speed means nothing and we are going for looks
+      //.revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
+      .revolution(function(d) {return randoms[d.FIELD1]})
+      .orbitSize(function(d) {return [d.light_years, d.light_years]})
+      .totallyrad(function(d) { return isNaN(d.light_years) ? 400+spanrandoms[d.FIELD1]*200 : 1 * Math.log(d.light_years)*40})
+      .speed(1)
+      .mode("atomic")
+      .nodes(_data);
+
+      d3.select("svg")
+      .append("g")
+      .attr("class", "viz")
+      .attr("transform", "translate(50,50)")
+      .selectAll("g.node").data(orbit.nodes())
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      //.attr("transform", function(d) {return "translate(" + d.x +"," + d.y+")"})
+      .on("mouseover", nodeOver)
+      .on("mouseout", nodeOut)
+
+      d3.selectAll("g.node")
+      .append("circle")
+      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 2 })
+      .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
+
+      // d3.select("#buttons").append("button").html("solar").on("click", function() {})
+
+      orbit.on("tick", function() {
+        
+
+        d3.selectAll("g.node").attr("transform", function(d) {
+          return "translate(" + d.x +"," + d.y +")"});
+      });
+
+      orbit.start();
+
+      function nodeOver(d) {
+        orbit.stop();
+        d3.select(this).select("circle").style("stroke", "black").style("stroke-width", 3);
+      }
+
+      function nodeOut() {
+        orbit.start();
+        d3.selectAll("g.node > circle").style("stroke", "none").style("stroke-width", 0);    
+      }
+    }
+  </script>
   
-  #viz, svg {
-    width: 1000px;
-    height: 1000px;
-  }
-
-  text {
-    pointer-events: none;
-  }
-
-  #buttons {
-    position: absolute;
-    top:0;
-    left:0;
-  }  
-</style>
-<script>
-
-
-function makeViz() {
-
-  d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
-
-}
-
-// 3718 is the number of planets in the JSON file
-var randoms = Array(3719);
-for(var i = 0; i < randoms.length; i++){
-  randoms[i] = Math.random()*0.25 + 0.25;
-}
-function drawOrbit(_data) {
-
-  orbitScale = d3.scale.linear().domain([1, 3]).range([3.8, 1.5]).clamp(true);
-  radiusScale = d3.scale.linear().domain([210.64,2500,10000,71492.68]).range([2,4,8,16]);
-
-  orbit = d3.layout.orbit().size([700,700])
-  .children(function(d) {return d.values})
-  // use random to set orbital speed since speed means nothing and we are going for looks
-  //.revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
-  .revolution(function(d) {return randoms[d.FIELD1]})
-  .orbitSize(function(d) {return [d.light_years, d.light_years]})
-  .totallyrad(function(d) { return isNaN(d.light_years) ? 550 : 1 * Math.log(d.light_years)*50})
-  .speed(1)
-  .mode("atomic")
-  .nodes(_data);
-
-  d3.select("svg")
-  .append("g")
-  .attr("class", "viz")
-  .attr("transform", "translate(50,50)")
-  .selectAll("g.node").data(orbit.nodes())
-  .enter()
-  .append("g")
-  .attr("class", "node")
-  //.attr("transform", function(d) {return "translate(" + d.x +"," + d.y+")"})
-  .on("mouseover", nodeOver)
-  .on("mouseout", nodeOut)
-
-  d3.selectAll("g.node")
-  .append("circle")
-  .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 2 })
-  .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
-
-  // d3.select("#buttons").append("button").html("solar").on("click", function() {})
-
-  orbit.on("tick", function() {
-    
-
-    d3.selectAll("g.node").attr("transform", function(d) {
-      return "translate(" + d.x +"," + d.y +")"});
-  });
-
-  orbit.start();
-
-  function nodeOver(d) {
-    orbit.stop();
-    d3.select(this).select("circle").style("stroke", "black").style("stroke-width", 3);
-  }
-
-  function nodeOut() {
-    orbit.start();
-    d3.selectAll("g.node > circle").style("stroke", "none").style("stroke-width", 0);    
-  }
-}
-
-</script>
-<body onload=makeViz() style="background-color:black;">
-    <!-- <div class="stars"></div> -->
-    <!-- <div class="twinkling"></div> -->
- 
-    <div id="viz"><svg></svg><div id="buttons"></div></div>
-  <footer>
-    <script src="../src/d3.min.js"></script>
-    <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
-  </footer>
-</body>
+  <body onload=makeViz() style="background-color:black;">
+      <div class="stars"></div>
+      <div class="twinkling"></div>
+  
+      <div id="viz"><svg></svg><div id="buttons"></div></div>
+    <footer>
+      <script src="../src/d3.min.js"></script>
+      <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
+    </footer>
+  </body>
 </html>
