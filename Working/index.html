@@ -6,7 +6,7 @@
   </head>
   <style>
     #viz, svg {
-      position: relative;
+      position: absolute;
       width: 1000px;
       height: 1000px;
       z-index: 2;
@@ -60,10 +60,9 @@
       .enter()
       .append("g")
       .attr("class", "node")
-      //.attr("transform", function(d) {return "translate(" + d.x +"," + d.y+")"})
       .on("mouseover", nodeOver)
       .on("mouseout", nodeOut)
-
+      
       d3.selectAll("g.node")
       .append("circle")
       .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 2 })
@@ -72,8 +71,6 @@
       // d3.select("#buttons").append("button").html("solar").on("click", function() {})
 
       orbit.on("tick", function() {
-        
-
         d3.selectAll("g.node").attr("transform", function(d) {
           return "translate(" + d.x +"," + d.y +")"});
       });
@@ -95,7 +92,6 @@
   <body onload=makeViz() style="background-color:black;">
       <div class="stars"></div>
       <div class="twinkling"></div>
-  
       <div id="viz"><svg></svg><div id="buttons"></div></div>
     <footer>
       <script src="../src/d3.min.js"></script>
