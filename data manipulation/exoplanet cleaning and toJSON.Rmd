@@ -23,13 +23,6 @@ nrow(planets[is.na(planets$st_dist),]) / nrow(planets)
 planets$light_years <- 3.26156*planets$st_dist
 planets <- subset(planets, select = -(st_dist))
 
-# add a dummy first planet. this planet gets skipped in the code
-# rbind(data.frame(V1 = 0, V2 = 10000), dat)
-dummy.row <- data.frame("loc_rowid" = 0, "key" = "dummy",  "star_name" = "dummy",  "planet_letter" = 'n',
-                        "pl_pnum" =  1, "orbital_period" = 1, "radius" =  1, "st_teff"  = 1, "st_mass" = 1, 
-                        "st_rad" = "1", "rowupdate" = "5/10/1778", "light_years" = 1)
-planets <- rbind(dummy.row, planets)
-
 head(planets)
 
 # save the data
