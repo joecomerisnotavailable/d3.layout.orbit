@@ -1,19 +1,5 @@
 [
   {
-    "FIELD1": 1,
-    "key": "dummy",
-    "star_name": "dummy",
-    "planet_letter": "n",
-    "pl_pnum": 1,
-    "orbital_period": "1",
-    "radius": "1",
-    "st_teff": "1",
-    "st_mass": "1",
-    "st_rad": "1",
-    "rowupdate": "5/10/1778",
-    "light_years": "1"
-  },
-  {
     "FIELD1": 2,
     "key": "11 Com_b",
     "star_name": "11 Com",

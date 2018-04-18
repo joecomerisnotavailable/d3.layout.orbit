@@ -59,11 +59,11 @@ copied from: https://codepen.io/WebSonick/pen/vjmgu
   background:transparent url(http://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center;
   z-index:1;
 
-  -moz-animation:move-twink-back 200s linear infinite;
-  -ms-animation:move-twink-back 200s linear infinite;
-  -o-animation:move-twink-back 200s linear infinite;
-  -webkit-animation:move-twink-back 200s linear infinite;
-  animation:move-twink-back 200s linear infinite;
+  -moz-animation:move-twink-back 400s linear infinite;
+  -ms-animation:move-twink-back 400s linear infinite;
+  -o-animation:move-twink-back 400s linear infinite;
+  -webkit-animation:move-twink-back 400s linear infinite;
+  animation:move-twink-back 400s linear infinite;
 }
 
 .clouds{
@@ -76,3 +76,20 @@ copied from: https://codepen.io/WebSonick/pen/vjmgu
   -webkit-animation:move-clouds-back 200s linear infinite;
   animation:move-clouds-back 200s linear infinite;
 }
+
+#viz, svg {
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    z-index: 2;
+  }
+
+  text {
+    pointer-events: none;
+  }
+
+  #buttons {
+    position: absolute;
+    top:0;
+    left:0;
+  }  

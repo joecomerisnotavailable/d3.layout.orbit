@@ -4,96 +4,115 @@
     <title>Orbit Layout Modes</title>
     <meta charset="utf-8" />
   </head>
-  <style>
-    #viz, svg {
-      position: absolute;
-      width: 1000px;
-      height: 1000px;
-      z-index: 2;
-    }
-
-    text {
-      pointer-events: none;
-    }
-
-    #buttons {
-      position: absolute;
-      top:0;
-      left:0;
-    }  
-  </style>
   <script>
 
+    // this function sends the data to the draw orbit function
+    // ran onload of page
     function makeViz() {
       d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
     }
 
+    // this creates random arrays for the planet speeds and the NA ring
     // 3718 is the number of planets in the JSON file
     var randoms = Array(3719); // for planet speeds
     var spanrandoms = Array(3719); // for NaN lightyears to create a span of the ring
+    // populate the arrays
     for(var i = 0; i < randoms.length; i++){
-      randoms[i] = Math.random()*0.15 + 0.15;
-      spanrandoms[i] = Math.random()*0.25 + 0.25;
+      randoms[i] = Math.random()*0.15 + 0.15; // speeds are between 0.15 and .30
+      spanrandoms[i] = Math.random()*0.25 + 0.25; // span distance from earth btwn 0.25  and .5
     }
 
+    // most work is done in this function, which recieves the data onload
     function drawOrbit(_data) {
 
-      orbitScale = d3.scale.linear().domain([1, 3]).range([3.8, 1.5]).clamp(true);
-      radiusScale = d3.scale.linear().domain([210.64,2500,10000,71492.68]).range([2,4,8,16]);
-
-      orbit = d3.layout.orbit().size([700,700])
-      .children(function(d) {return d.values})
-      // use random to set orbital speed since speed means nothing and we are going for looks
-      //.revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
+      orbit = d3.layout.orbit() // instantiates a new orbit class
+      .size([700,700]) // sets the size of the visualization
+      .children(function(d) {return d.values}) // sets the function to be used to find children (planets are children to suns, moons are children to planets)
+      
+      // set orbital speed to random since speed means nothing and we are going for looks
+      // for solar systems use more like --> .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
       .revolution(function(d) {return randoms[d.FIELD1]})
-      .orbitSize(function(d) {return [d.light_years, d.light_years]})
+
+      // distance of the orbit
+      // if the value is NA, replace with distance in random array
+      // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
       .totallyrad(function(d) { return isNaN(d.light_years) ? 400+spanrandoms[d.FIELD1]*200 : 1 * Math.log(d.light_years)*40})
-      .speed(1)
-      .mode("atomic")
+      
+      // restructures the data
+      // creates a depth field for each planet (used later to color earth diff from exoplanets)
+      // creates a random starting point for the planet
       .nodes(_data);
 
-      d3.select("svg")
-      .append("g")
-      .attr("class", "viz")
-      .attr("transform", "translate(50,50)")
-      .selectAll("g.node").data(orbit.nodes())
-      .enter()
-      .append("g")
-      .attr("class", "node")
+      // add the data to the visualization and set cursor behavior
+      // creates a node for each planet
+      d3.select("svg") // to the svg part of the page
+      .append("g") // add a group g
+      .attr("class", "viz") // of the "viz" class
+      .attr("transform", "translate(150,150)") // pushes viz over and down by 150
+      .selectAll("g.node") // select all the nodes made in the next couple lines
+        .data(orbit.nodes()).enter() // add the data
+        .append("g").attr("class", "node")  // add a node for each data point
+      // set behavior for cursor going over a node (runs nodeOver function)
       .on("mouseover", nodeOver)
+      // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
       
-      d3.selectAll("g.node")
-      .append("circle")
-      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*2 : 2 })
+      // add a circle at the data points
+      d3.selectAll("g.node") // sellect all the nodes
+      .append("circle") // add a circle
+      // set the radius of the circle
+      // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
+      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*5 : 5 })
+      // fill the circle blue if it's the earth ("root" of the data), white otherwise
       .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
 
-      // d3.select("#buttons").append("button").html("solar").on("click", function() {})
+      // this is how to add a button --> d3.select("#buttons").append("button").html("solar").on("click", function() {})
 
+      // when the animation dispatches a tick, this function redraws each element at the new x,y
       orbit.on("tick", function() {
-        d3.selectAll("g.node").attr("transform", function(d) {
-          return "translate(" + d.x +"," + d.y +")"});
+        d3.selectAll("g.node") // sell all the nodes of the group
+        .attr("transform", function(d) {
+          return "translate(" + d.x +"," + d.y +")"}); // move to the new location
       });
 
+      // start the animation
       orbit.start();
 
+      // sets the behavior for when the cursor goes over a node (planet)
       function nodeOver(d) {
+        // stop the animation
         orbit.stop();
-        d3.select(this).select("circle").style("stroke", "black").style("stroke-width", 3);
+        // draw a black ring around each planet
+        d3.select(this)
+        .select("circle")
+        .style("stroke", "black")
+        .style("stroke-width", 3);
       }
 
+      // sets the behavior for when the cursor leaves a node (planet)
       function nodeOut() {
+        // restart the animation
         orbit.start();
-        d3.selectAll("g.node > circle").style("stroke", "none").style("stroke-width", 0);    
+        // remove the border from the circle
+        d3.selectAll("g.node > circle")
+        .style("stroke", "none")
+        .style("stroke-width", 0);    
       }
     }
   </script>
   
-  <body onload=makeViz() style="background-color:black;">
+  <!-- run the makeViz() code on page load -->
+  <body onload=makeViz()>
+      <!-- add the star background -->
       <div class="stars"></div>
-      <div class="twinkling"></div>
-      <div id="viz"><svg></svg><div id="buttons"></div></div>
+      <!-- add twinkling -->
+      <!-- <div class="twinkling"></div> -->
+      <div id="viz"> <!-- Place the viz here -->
+        <svg></svg> <!-- Place the svg here -->
+        <div id="buttons"></div> <!-- Place the buttons here -->
+      </div>
     <footer>
+      <!-- Place the javascript source code links here -->
       <script src="../src/d3.min.js"></script>
       <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
     </footer>
