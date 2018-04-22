@@ -8,26 +8,28 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyr)
+library(dplyr)
 ```
 
 ## Read in planet csv, grab a few, and convert to JSON
 
 ```{r cars}
 planets <- read.csv("../exoplanet_data/planets_filtered_columns.csv", stringsAsFactors = FALSE)
-head(planets)
 planets <- unite(planets, key, c(pl_hostname, pl_letter), remove=FALSE)
+head(planets)
+names(planets) <- c("rowid", "key", "star_name", "planet_letter", "discovery_method", "pl_pnum", "orbital_period", "orbital_eccentricity", "st_dist", "star_temp", "star_radius", "planet_temp", "radius", "discovery_year")
 
-# how many planets do we know the distance of
+# how many planets do we not know the distance of
 nrow(planets[is.na(planets$st_dist),]) / nrow(planets)
 
 # convert parsecs to lightyears *design decision*
 planets$light_years <- 3.26156*planets$st_dist
 planets <- subset(planets, select = -(st_dist))
 
-head(planets)
-
+planets$radius
+arrange(planets, desc(radius))
 # save the data
-write.csv(planets[1:10,2:ncol(planets)], "../exoplanet_data/5planets.csv")
+write.csv(planets[1:5,2:ncol(planets)], "../exoplanet_data/5planets.csv")
 write.csv(planets[,2:ncol(planets)], "../exoplanet_data/allplanets.csv")
 ```
 
@@ -35,5 +37,10 @@ write.csv(planets[,2:ncol(planets)], "../exoplanet_data/allplanets.csv")
 ```{r}
 # how many planets do we know the radius of
 nrow(planets[!is.na(planets$radius),]) / nrow(planets)
+```
+
+```{r}
+# what is the largest planet
+max(planets[which(!is.na(planets$radius)), "radius"])
 ```
 
