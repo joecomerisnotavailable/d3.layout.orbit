@@ -25,7 +25,7 @@
     var shouldbepaused = false;
     // populate the arrays
     for(var i = 0; i < randoms.length; i++){
-      randoms[i] = Math.random()*0.15 + 0.15; // speeds are between 0.15 and .30
+      randoms[i] = Math.random()*0.2 + 0.15; // speeds are between 0.15 and .35
       spanrandoms[i] = Math.random()*0.25 + 0.25; // span distance from earth btwn 0.25  and .5
     }
 
@@ -71,10 +71,10 @@
       .append("circle") // add a circle
       // set the radius of the circle
       // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
-      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 3 : d.radius*5 : 5 })
+      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius : 1 })
       // fill the circle blue if it's the earth ("root" of the data), white otherwise
       .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"})
-      .style("stroke", "lightgray");
+      .style("stroke", function(d) {return d.depth == 0 ? "blue" : "lightgray"});
 
       d3.select("#buttons").append("button").html("Pause Animation").on("click", pause)
       d3.select("#buttons").append("button").html("Start Animation").on("click", start)
@@ -124,8 +124,8 @@
         shouldbepaused ? orbit.stop() : orbit.start();
         // remove the border from the circle
         d3.selectAll("g.node > circle")
-        .style("stroke", "none")
-        .style("stroke-width", 0);    
+        .style("stroke", "lightgray")
+        .style("stroke-width", 1);    
       }
     }
   </script>
