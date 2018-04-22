@@ -73,7 +73,8 @@
       // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
       .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 3 : d.radius*5 : 5 })
       // fill the circle blue if it's the earth ("root" of the data), white otherwise
-      .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
+      .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"})
+      .style("stroke", "lightgray");
 
       d3.select("#buttons").append("button").html("Pause Animation").on("click", pause)
       d3.select("#buttons").append("button").html("Start Animation").on("click", start)
