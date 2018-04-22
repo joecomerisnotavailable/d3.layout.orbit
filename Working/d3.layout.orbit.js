@@ -12,6 +12,8 @@ d3.layout.orbit = function() {
 	var orbitRadius = function() {return 1};
 	var maxOrbitalPeriod = 0;
 	var minOrbitalPeriod = 999999999;
+	var maxPlanetTemp = 0;
+	var minPlanetTemp = 999999999;
 
 	// returns instance of _orbitLayout
 	// useful to change layout of this instance from another file
@@ -44,11 +46,18 @@ d3.layout.orbit = function() {
 		clearInterval(tickInterval);
 	}
 
+	// accessors for various data features
 	_orbitLayout.minOrbitalPeriod = function() {
 		return minOrbitalPeriod;
 	}
 	_orbitLayout.maxOrbitalPeriod = function(){
 		return maxOrbitalPeriod;
+	}
+	_orbitLayout.minPlanetTemp = function() {
+		return minPlanetTemp;
+	}
+	_orbitLayout.maxPlanetTemp = function(){
+		return maxPlanetTemp;
 	}
 
 	// can be used to adjust the speed of all the points
@@ -130,12 +139,17 @@ d3.layout.orbit = function() {
 					childrenAccessor(_node)[x].depth = 1;
 					// add this planet to the flattenedNodes so it can be animated orbiting it's parent
 					flattenedNodes.push(childrenAccessor(_node)[x]);
-					if(childrenAccessor(_node)[x].orbital_period > maxOrbitalPeriod && childrenAccessor(_node)[x].orbital_period != "NA"){
-						maxOrbitalPeriod = childrenAccessor(_node)[x].orbital_period;
-						console.log("max set");
+					if(+childrenAccessor(_node)[x].orbital_period > maxOrbitalPeriod && childrenAccessor(_node)[x].orbital_period != "NA"){
+						maxOrbitalPeriod = +childrenAccessor(_node)[x].orbital_period;
 					}
-					if(childrenAccessor(_node)[x].orbital_period < minOrbitalPeriod){
-						minOrbitalPeriod = childrenAccessor(_node)[x].orbital_period;
+					if(+childrenAccessor(_node)[x].orbital_period < minOrbitalPeriod){
+						minOrbitalPeriod = +childrenAccessor(_node)[x].orbital_period;
+					}
+					if(+childrenAccessor(_node)[x].planet_temp > maxPlanetTemp && childrenAccessor(_node)[x].planet_temp != "NA"){
+						maxPlanetTemp = +childrenAccessor(_node)[x].planet_temp;
+					}
+					if(+childrenAccessor(_node)[x].planet_temp < minPlanetTemp){
+						minPlanetTemp = +childrenAccessor(_node)[x].planet_temp;
 					}
 
 				}

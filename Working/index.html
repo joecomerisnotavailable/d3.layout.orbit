@@ -111,23 +111,23 @@
           d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.pl_pnum] : "lightgray"});
         }
         if (feature == "orbper"){
-          var colors = rainbowify(orbit.minOrbitalPeriod(), orbit.maxOrbitalPeriod());
+          var colors = rainbowify(Math.log(orbit.minOrbitalPeriod()), Math.log(orbit.maxOrbitalPeriod()));
           d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? "lightgray": colors.colourAt(Math.round(d.orbital_period - orbit.minOrbitalPeriod())) : "lightgray"});
         }
         if (feature == "pltemp"){
-          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.planet_temp] : "lightgray"});
+          var colors = rainbowify(orbit.minPlanetTemp(), orbit.maxPlanetTemp());
+          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.planet_temp) ? "lightgray": colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
         }
         if (feature == "rad"){
-          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.radius] : "lightgray"});
         }
         if (feature == "dist"){
-          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.light_years] : "lightgray"});
+
         }
         if (feature == "discyear"){
-          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.discovery_year] : "lightgray"});
+
         }
         if (feature == "discmeth"){
-          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.discovery_method] : "lightgray"});
+
         }
       }
       // start the animation
