@@ -4,6 +4,12 @@
     <title>Orbit Layout Modes</title>
     <meta charset="utf-8" />
   </head>
+  
+  <script
+  src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  
   <script>
 
     // this function sends the data to the draw orbit function
@@ -16,6 +22,7 @@
     // 3718 is the number of planets in the JSON file
     var randoms = Array(3719); // for planet speeds
     var spanrandoms = Array(3719); // for NaN lightyears to create a span of the ring
+    var shouldbepaused = false;
     // populate the arrays
     for(var i = 0; i < randoms.length; i++){
       randoms[i] = Math.random()*0.15 + 0.15; // speeds are between 0.15 and .30
@@ -57,27 +64,48 @@
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
       
+      planetColors = {1: "white", 2: "GreenYellow", 3: "orange", 4: "OrangeRed", 5: "red", 6: "darkred", 7: "MediumSpringGreen", 8: "Orchid"}
+
       // add a circle at the data points
       d3.selectAll("g.node") // sellect all the nodes
       .append("circle") // add a circle
       // set the radius of the circle
       // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
-      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 1 : d.radius*5 : 5 })
+      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 3 : d.radius*5 : 5 })
       // fill the circle blue if it's the earth ("root" of the data), white otherwise
       .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"});
 
-      // this is how to add a button --> d3.select("#buttons").append("button").html("solar").on("click", function() {})
-
+      d3.select("#buttons").append("button").html("Pause Animation").on("click", pause)
+      d3.select("#buttons").append("button").html("Start Animation").on("click", start)
+      d3.select("#buttons").append("button").html("Planet Number").on("click", function() {colorbyfeature("plnum")})
+      
       // when the animation dispatches a tick, this function redraws each element at the new x,y
       orbit.on("tick", function() {
         d3.selectAll("g.node") // sell all the nodes of the group
         .attr("transform", function(d) {
           return "translate(" + d.x +"," + d.y +")"}); // move to the new location
       });
-
+      
+      // color function
+      function colorbyfeature(feature){
+        if (feature == "plnum"){
+          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? planetColors[d.pl_pnum] : "lightgray"});
+        }
+      }
       // start the animation
       orbit.start();
 
+      // pause function
+      function pause(){
+        orbit.stop();
+        shouldbepaused = true;
+      }
+
+      //start function
+      function start(){
+        orbit.start();
+        shouldbepaused = false;
+      }
       // sets the behavior for when the cursor goes over a node (planet)
       function nodeOver(d) {
         // stop the animation
@@ -92,7 +120,7 @@
       // sets the behavior for when the cursor leaves a node (planet)
       function nodeOut() {
         // restart the animation
-        orbit.start();
+        shouldbepaused ? orbit.stop() : orbit.start();
         // remove the border from the circle
         d3.selectAll("g.node > circle")
         .style("stroke", "none")

@@ -92,4 +92,5 @@ copied from: https://codepen.io/WebSonick/pen/vjmgu
     position: absolute;
     top:0;
     left:0;
+    z-index: 9000;
   }  
