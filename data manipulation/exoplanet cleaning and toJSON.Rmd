@@ -26,8 +26,7 @@ nrow(planets[is.na(planets$st_dist),]) / nrow(planets)
 planets$light_years <- 3.26156*planets$st_dist
 planets <- subset(planets, select = -(st_dist))
 
-planets$radius
-arrange(planets, desc(radius))
+planets <- arrange(planets, desc(radius))
 # save the data
 write.csv(planets[1:5,2:ncol(planets)], "../exoplanet_data/5planets.csv")
 write.csv(planets[,2:ncol(planets)], "../exoplanet_data/allplanets.csv")
