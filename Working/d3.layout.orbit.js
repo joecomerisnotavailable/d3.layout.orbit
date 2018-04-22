@@ -9,7 +9,9 @@ d3.layout.orbit = function() {
     var tickInterval;
     var childrenAccessor = function(d) {return d.children};
     var tickRadianFunction = function() {return 1};
-    var orbitRadius = function() {return 1};
+	var orbitRadius = function() {return 1};
+	var maxOrbitalPeriod = 0;
+	var minOrbitalPeriod = 999999999;
 
 	// returns instance of _orbitLayout
 	// useful to change layout of this instance from another file
@@ -17,6 +19,7 @@ d3.layout.orbit = function() {
 	function _orbitLayout() {
 		return _orbitLayout;
 	}
+	
 
 	// function to power the animation
 	_orbitLayout.start = function() {
@@ -39,6 +42,13 @@ d3.layout.orbit = function() {
 	// function to stop the spinning
 	_orbitLayout.stop = function() {
 		clearInterval(tickInterval);
+	}
+
+	_orbitLayout.minOrbitalPeriod = function() {
+		return minOrbitalPeriod;
+	}
+	_orbitLayout.maxOrbitalPeriod = function(){
+		return maxOrbitalPeriod;
 	}
 
 	// can be used to adjust the speed of all the points
@@ -120,6 +130,14 @@ d3.layout.orbit = function() {
 					childrenAccessor(_node)[x].depth = 1;
 					// add this planet to the flattenedNodes so it can be animated orbiting it's parent
 					flattenedNodes.push(childrenAccessor(_node)[x]);
+					if(childrenAccessor(_node)[x].orbital_period > maxOrbitalPeriod && childrenAccessor(_node)[x].orbital_period != "NA"){
+						maxOrbitalPeriod = childrenAccessor(_node)[x].orbital_period;
+						console.log("max set");
+					}
+					if(childrenAccessor(_node)[x].orbital_period < minOrbitalPeriod){
+						minOrbitalPeriod = childrenAccessor(_node)[x].orbital_period;
+					}
+
 				}
 
 			}
