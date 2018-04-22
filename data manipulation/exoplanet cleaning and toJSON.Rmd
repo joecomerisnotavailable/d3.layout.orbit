@@ -14,7 +14,8 @@ library(tidyr)
 
 ```{r cars}
 planets <- read.csv("../exoplanet_data/planets_filtered_columns.csv", stringsAsFactors = FALSE)
-planets <- unite(planets, key, c(star_name, planet_letter), remove=FALSE)
+head(planets)
+planets <- unite(planets, key, c(pl_hostname, pl_letter), remove=FALSE)
 
 # how many planets do we know the distance of
 nrow(planets[is.na(planets$st_dist),]) / nrow(planets)
