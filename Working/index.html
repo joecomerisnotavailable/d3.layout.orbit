@@ -79,7 +79,7 @@
       //.on("mouseover", nodeOver)
       .on("mouseover", nodeOver2)
       // set behavior for cursor leaving a node (runs nodeOut function)
-      .on("mouseout", nodeOut)
+      .on("mouseout", nodeOut2)
 
       // add a circle at the data points
       d3.selectAll("g.node") // sellect all the nodes
@@ -180,7 +180,7 @@
 
         d3.select(this)
           .append("text")
-          .text(function(d){return d.star_name + d.star_temp})
+          .text(function(d,i){return d.star_name + d.star_temp})
           .attr("class", "nodetext")
           .attr("x",0)
           .attr("y", 0)
@@ -228,9 +228,12 @@
         .style("stroke", function(d) {return d.depth == 0 ? "black" : "lightgray"})
         .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.25});    
       }
-
       
     }
+      function nodeOut2() {
+         d3.select(this)
+          .select("text").remove();
+      }
     
     
   </script>
