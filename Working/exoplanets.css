@@ -79,8 +79,8 @@ copied from: https://codepen.io/WebSonick/pen/vjmgu
 
 #viz, svg {
     position: absolute;
-    width: 1000px;
-    height: 1000px;
+    width: 100%;
+    height: 100%;
     z-index: 2;
   }
 
@@ -88,9 +88,41 @@ copied from: https://codepen.io/WebSonick/pen/vjmgu
     pointer-events: none;
   }
 
-  #buttons {
+#buttons {
     position: absolute;
     top:0;
     left:0;
+    background: black;
     z-index: 9000;
-  }  
+}
+
+.btn {
+    background: none;
+    color: white;
+    border: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+    border-right: 1px solid;
+    cursor: pointer;
+  }
+  .btn:visited {
+    border: none;
+    outline:none;
+  }
+
+  .btn:active {
+    border: none;
+    outline:none;
+  }
+  .btn:hover {
+    border: none;
+    color: darkgray;
+    border-right:1px solid white;
+ 
+  }
+  .btn:focus {
+    border: none;
+    border-right:1px solid white;
+    color: lightgray;
+    outline:none;
+  }
