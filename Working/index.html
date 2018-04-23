@@ -101,6 +101,7 @@
       d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
       d3.select("#buttons").append("button").attr("class","btn").html("Discovery Year").on("click", function() {colorbyfeature("discyear")})
       d3.select("#buttons").append("button").attr("class","btn").html("Discovery Method").on("click", function() {colorbyfeature("discmeth")})
+      d3.select("#buttons").append("button").attr("class","btn").html("Reset").on("click", function() {window.location.reload()})
 
       // when the animation dispatches a tick, this function redraws each element at the new x,y
       orbit.on("tick", function() {
