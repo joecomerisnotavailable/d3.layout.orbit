@@ -73,9 +73,11 @@
       .attr("transform", "translate(-80,-80)") // pushes viz over and down by 150
       .selectAll("g.node") // select all the nodes made in the next couple lines
       .data(orbit.nodes()).enter() // add the data
-      .append("g").attr("class", "node")  // add a node for each data point
+      .append("g").attr("class", "node")
+      // add a node for each data point
       // set behavior for cursor going over a node (runs nodeOver function)
-      .on("mouseover", nodeOver)
+      //.on("mouseover", nodeOver)
+      .on("mouseover", nodeOver2)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
 
@@ -90,7 +92,6 @@
       .style("stroke", function(d) {return d.depth == 0 ? "black" : "lightgray"})
       .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.25});
 
-      
 
       d3.select("#buttons").append("button").attr("class","btn").html("Pause Animation").on("click", pause)
       d3.select("#buttons").append("button").attr("class","btn").html("Start Animation").on("click", start)
@@ -169,6 +170,52 @@
         .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 3});
 
         var test = svgPanZoom('#kevin');
+      }
+
+      function nodeOver2(d) {
+        orbit.stop();
+
+        d3.select(this)
+          .select("text").remove();
+
+        d3.select(this)
+          .append("text")
+          .text(function(d){return d.star_name + d.star_temp})
+          .attr("class", "nodetext")
+          .attr("x",0)
+          .attr("y", 0)
+          .style("font-size","5px")
+          .attr("text-anchor", "middle")
+          .style("fill", "white")
+          .transition()
+          .duration(300)
+          .style("font-size","12px");
+
+        // var bar = d3.select(this)
+        //             .selectAll("g")
+        //             .data(data)
+        //             .enter().append("g")
+        //             //.attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+        //   bar.append("rect")
+        //     .attr("width", 50)
+        //     .attr("height", 20);
+
+        //   bar.append("text")
+        //     .text(function(d){return d.star_name})
+        //     .attr("x",0)
+        //     .attr("y", 20)
+        //     .style("fill", "white")
+
+        // d3.selectAll("g.node")
+        //   .append("p").text(d.star_name)
+        //   //.append("p").text(d.planet_letter)
+        //   //.append("p").text(d.orbital_period)
+        //   //.append("p").text(d.star_temp)
+        //   //.append("p").text(d.star_radius)
+        //   .style("text-anchor", "middle")
+       
+      
       }
 
       // sets the behavior for when the cursor leaves a node (planet)
