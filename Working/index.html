@@ -9,6 +9,7 @@
   <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
   <script src="../src/rainbowvis.js"></script>
   <script src="../src/svg-pan-zoom.js"></script>
+  <script src="gradients.js"></script>
   <script>
 
     // this function sends the data to the draw orbit function
@@ -46,7 +47,7 @@
 
     // most work is done in this function, which recieves the data onload
     function drawOrbit(_data) {
-
+      
       orbit = d3.layout.orbit() // instantiates a new orbit class
       .size([screen.width,screen.height]) // sets the size of the visualization
       .children(function(d) {return d.values}) // sets the function to be used to find children (planets are children to suns, moons are children to planets)
@@ -80,17 +81,15 @@
       .on("mouseout", nodeOut)
 
       // add a circle at the data points
-      d3.selectAll("g.node") // sellect all the nodes
-      .append("circle") // add a circle
-      // set the radius of the circle
-      // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
-      .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 48 })
-      // fill the circle blue if it's the earth ("root" of the data), white otherwise
-      .style("fill", function(d) {return d.depth == 0 ? "blue" : "white"})
-      .style("stroke", function(d) {return d.depth == 0 ? "black" : "lightgray"})
-      .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.25});
-
-      
+      var planets = d3.selectAll("g.node") // sellect all the nodes
+        .append("circle") // add a circle
+        // set the radius of the circle
+        // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
+        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 48 })
+        // fill the circle blue if it's the earth ("root" of the data), white otherwise
+        .style("fill", function(d) {return d.depth == 0 ? "blue" : "url(#gradientRadial-" + d.FIELD1 + ")";})
+        .style("stroke", function(d) {return d.depth == 0 ? "black" : "transparent"})
+        .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.25})
 
       d3.select("#buttons").append("button").attr("class","btn").html("Pause Animation").on("click", pause)
       d3.select("#buttons").append("button").attr("class","btn").html("Start Animation").on("click", start)
@@ -103,9 +102,12 @@
       d3.select("#buttons").append("button").attr("class","btn").html("Discovery Method").on("click", function() {colorbyfeature("discmeth")})
       d3.select("#buttons").append("button").attr("class","btn").html("Reset").on("click", function() {window.location.reload()})
 
+      createGradients();
+
       // when the animation dispatches a tick, this function redraws each element at the new x,y
       orbit.on("tick", function() {
         d3.selectAll("g.node") // sell all the nodes of the group
+      
         .attr("transform", function(d) {
           return "translate(" + d.x +"," + d.y +")"}); // move to the new location
       });
@@ -114,7 +116,7 @@
       function colorbyfeature(feature){
         if (feature == "plnum"){
           var colors = rainbowify(orbit.minPlanetsperSystem(), orbit.maxPlanetsperSystem());
-          d3.selectAll("circle").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? "black": colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});
+          d3.selectAll("circle").each(function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? updateColor("darkgray", d.FIELD1): updateColor('#' + colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()), d.FIELD1) : "lightgray"});          
         }
         if (feature == "orbper"){
           var colors = rainbowify(Math.log(orbit.minOrbitalPeriod()), Math.log(orbit.maxOrbitalPeriod()));
@@ -143,7 +145,7 @@
       }
       // start the animation
       start();
-      colorbyfeature("dist")
+      // colorbyfeature("dist")
 
       // pause function
       function pause(){
