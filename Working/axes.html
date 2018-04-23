@@ -1,0 +1,70 @@
+<html>
+    <head>
+    <title>D3 Axis Example</title>
+    <script src="http://d3js.org/d3.v2.js"></script>
+    </head>
+    
+    <body>
+    <button id="rescale" onclick="rescale();">Rescale</button>
+    <script>
+        var width = 900,
+            height = 400,
+            padding = 100,
+            open = 0;
+            
+        // create an svg container
+        var vis = d3.select("body").
+            append("svg:svg")
+                .attr("width", width)
+                .attr("height", height);
+                
+        // define the y scale  (vertical)
+        var xScale = d3.scale.log()
+            .domain([1, 1])    // values between 0 and 100
+             .range([1,1]);
+
+        var superscript = ["0LY","","10LY","","100LY","","1000LY","","10000LY","","1000000LY"],
+        formatPower = function(d) { return (d + "").split("").map(function(c) { return superscript[c]; }).join(""); };
+    
+        // define the x axis
+        var xAxis = d3.svg.axis()
+            .orient("bottom")
+            .scale(xScale)
+            .ticks(1, function(d) { return formatPower(Math.round(Math.log(d) / Math.LN10)); });
+
+       // draw x axis with labels and move to the bottom of the chart area
+        vis.append("g")
+            .attr("class", "xaxis")   // give it a class so it can be used to select only xaxis labels  below
+            .attr("transform", "translate(0," + (height - padding) + ")")
+            .call(xAxis);
+
+        // now rotate text on x axis
+        // solution based on idea here: https://groups.google.com/forum/?fromgroups#!topic/d3-js/heOBPQF3sAY
+        // first move the text left so no longer centered on the tick
+        // then rotate up to get 45 degrees.
+       vis.selectAll(".xaxis text")  // select all the text elements for the xaxis
+          .attr("transform", function(d) {
+              return "translate(" + this.getBBox().height*-2 + "," + this.getBBox().height + ")rotate(-45)";
+        });
+
+        function rescale() {
+            xScale.domain([1, open == 1 ? 1 : Math.pow(10,6)*3])  // change scale to 0, to between 10 and 100
+            xScale.range([open == 1 ? 1 : padding, open == 1 ? 1 : width/2])
+            open = 1-open
+
+            vis.select(".xaxis")
+                    .transition().duration(1500).ease("sin-in-out")  // https://github.com/mbostock/d3/wiki/Transitions#wiki-d3_ease
+                    .call(xAxis);
+
+            vis.select(".xaxis_label")
+                .text("Rescaled Axis");
+            vis.selectAll(".xaxis text")  // select all the text elements for the xaxis
+          .attr("transform", function(d) {
+              return "translate(" + this.getBBox().height*-2 + "," + this.getBBox().height + ")rotate(-45)";
+        });
+        }
+    
+    </script>
+    
+    </body>
+</html>
