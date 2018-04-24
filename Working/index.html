@@ -73,7 +73,7 @@
       // add a node for each data point
       // set behavior for cursor going over a node (runs nodeOver function)
       //.on("mouseover", nodeOver)
-      .on("mouseover", nodeOver)
+      .on("mouseover", nodeOver2)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
       
@@ -183,21 +183,12 @@
       function nodeOver2(d) {
         orbit.stop();
 
-        d3.select(this)
-          .select("text").remove();
-
-        d3.select(this)
-          .append("text")
-          .text(function(d,i){return d.star_name + d.star_temp})
-          .attr("class", "nodetext")
-          .attr("x",0)
-          .attr("y", 0)
-          .style("font-size","5px")
-          .attr("text-anchor", "middle")
-          .style("fill", "white")
-          .transition()
-          .duration(300)
-          .style("font-size","12px");
+        var texttodisplay = d3.select(this).attr(function(d) {return d.star_name + d.star_temp})
+        console.log(texttodisplay)
+        
+        d3.select("h2 span").text("")
+          .append("p").text("TEST").style("font-size", "18px").style("color", "white")
+                                
 
         // var bar = d3.select(this)
         //             .selectAll("g")
@@ -255,6 +246,7 @@
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
       </div>
+      <h2><span></span></h2>
   </body>
   <footer>
   </footer>
