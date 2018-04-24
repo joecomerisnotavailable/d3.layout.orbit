@@ -178,43 +178,17 @@
         d3.select(this)
           .select("text").remove();
 
-        d3.select(this)
-          .append("text")
-          .text(function(d,i){return d.star_name + d.star_temp})
-          .attr("class", "nodetext")
-          .attr("x",0)
-          .attr("y", 0)
-          .style("font-size","5px")
-          .attr("text-anchor", "middle")
-          .style("fill", "white")
-          .transition()
-          .duration(300)
-          .style("font-size","12px");
-
-        // var bar = d3.select(this)
-        //             .selectAll("g")
-        //             .data(data)
-        //             .enter().append("g")
-        //             //.attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
-
-        //   bar.append("rect")
-        //     .attr("width", 50)
-        //     .attr("height", 20);
-
-        //   bar.append("text")
-        //     .text(function(d){return d.star_name})
-        //     .attr("x",0)
-        //     .attr("y", 20)
-        //     .style("fill", "white")
-
-        // d3.selectAll("g.node")
-        //   .append("p").text(d.star_name)
-        //   //.append("p").text(d.planet_letter)
-        //   //.append("p").text(d.orbital_period)
-        //   //.append("p").text(d.star_temp)
-        //   //.append("p").text(d.star_radius)
-        //   .style("text-anchor", "middle")
-       
+        d3.select("h2 span")
+          //.append("text")
+          //.text(function(d,i){return d.star_name + d.star_temp})
+          .text("")
+          .append("p").text("Planet Name: " + d.key).style("color", "white")
+          .append("p").text("Planet Temperature (K): " + d.planet_temp).style("color", "white")
+          .append("p").text("Planet Radius (Earth radii): " + d.radius).style("color", "white")
+          .append("p").text("Distance From Us (Light-Years): " + d.light_years).style("color", "white")
+          .append("p").text("Discovery Year: " + d.discover_year).style("color", "white")
+          .append("p").text("Number of Planets in Solar System: " + d.pl_pnum).style("color", "white");
+          // .append("p").text(d.star_name)
       
       }
 
@@ -240,6 +214,7 @@
   
   <!-- run the makeViz() code on page load -->
   <body onload=makeViz()>
+    <h2><span></span></h2>
       <!-- add the star background -->
       <div class="stars"></div>
       <!-- add twinkling -->
@@ -248,6 +223,7 @@
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
       </div>
+
   </body>
   <footer>
       <script>
