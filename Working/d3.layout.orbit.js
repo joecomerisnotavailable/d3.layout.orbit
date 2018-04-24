@@ -1,3 +1,4 @@
+
 d3.layout.orbit = function() {
 	var currentTickStep = 0;
 	var orbitNodes;
@@ -47,6 +48,7 @@ d3.layout.orbit = function() {
 			orbitDispatch.tick(); // send a message to the html to redraw the planets
 		}, 
 		1);
+	
 	}
 
 	// function to stop the spinning

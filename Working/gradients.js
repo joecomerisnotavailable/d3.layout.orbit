@@ -15,23 +15,25 @@ function createGradients() {
 		.attr("r", "50%")
 		.attr("fx", "0%")
         .attr("gradientUnits", "objectBoundingBox")
-		.attr('id', function(d){return "gradientRadial-"+d.FIELD1})
+        .attr('id', function(d){return "gradientRadial-"+d.FIELD1})
 
     gradientRadial.append("stop")
         .attr("class", "stop1")
         .attr("offset", "0%")
-        .attr("stop-color", function(d) {return d3.rgb("red").brighter(1);})
+        .attr("stop-color", function(d) {return d3.rgb("darkgray").brighter(1);})
+        .attr("stop-opacity", "0.2")
 
     gradientRadial.append("stop")
         .attr("class", "stop2")
-        .attr("offset", "40%")
-        .attr("stop-color", function(d) {return d3.rgb("red");})
+        .attr("offset", "60%")
+        .attr("stop-color", function(d) {return d3.rgb("darkgray").darker(20);})
+        .attr("stop-opacity", "0.5")
         
     gradientRadial.append("stop")
         .attr("class", "stop3")
         .attr("offset",  "100%")
-        .attr("stop-color", function(d) {return d3.rgb("red").darker(1.75);})
-	
+        .attr("stop-color", function(d) {return d3.rgb("darkgray").darker(50);});
+        
 };
 
 function updateColor(col, field1) {
