@@ -99,6 +99,7 @@
         .style("stroke-width", 0.25)
         .attr("id", "gradientplanet");
 
+      d3.select("#buttons").append("start").attr("class","btn").html("Start Introduction").on("click", function() {Draw0})
       d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
       d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
       d3.select("#buttons").append("button").attr("class","btn").html("Planet Radius").on("click", function() {colorbyfeature("rad")})
@@ -227,6 +228,7 @@
       <!-- add twinkling -->
       <!-- <div class="twinkling"></div> -->
       <div id="viz" align="center" align="top"> <!-- Place the viz here -->
+        <div id="richturd"></div> <!-- Place text here -->
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
       </div>
