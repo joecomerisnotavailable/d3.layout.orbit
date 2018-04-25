@@ -17,15 +17,16 @@
     function makeViz() {
       d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
     }
-    
-    
 
     planetDiscMethods = {"Imaging":0, "Transit":1, "Orbital Brightness Modulation":2, "Radial Velocity":3, "Transit Timing Variations":4, 
                              "Eclipse Timing Variations":5, "Astrometry":6, "Pulsation Timing Variations":7, "Microlensing":8, "Pulsar Timing":9}
     
-    function rainbowify(min, max) {
+    function rainbowify(min, max, reverse= false) {
       var numberOfItems = Math.round(max-min);
-      var rainbow = new Rainbow(); 
+      var rainbow = new Rainbow();
+      if (reverse){
+        rainbow.setSpectrum('blue', 'lime', 'yellow', 'red')
+      }
       rainbow.setNumberRange(0, numberOfItems);
       return rainbow;
     }
@@ -45,7 +46,7 @@
     function drawOrbit(_data) {
       
       orbit = d3.layout.orbit() // instantiates a new orbit class
-      .size([screen.width,screen.height]) // sets the size of the visualization
+      .size([screen.width*0.98,screen.height*0.85]) // sets the size of the visualization
       .children(function(d) {return d.values}) // sets the function to be used to find children (planets are children to suns, moons are children to planets)
       
       // set orbital speed to random since speed means nothing and we are going for looks
@@ -73,7 +74,7 @@
       // add a node for each data point
       // set behavior for cursor going over a node (runs nodeOver function)
       //.on("mouseover", nodeOver)
-      .on("mouseover", nodeOver2)
+      .on("mouseover", nodeOver)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
       
@@ -98,16 +99,13 @@
         .style("stroke-width", 0.25)
         .attr("id", "gradientplanet");
 
-      d3.select("#buttons").append("button").attr("class","btn").html("Pause Animation").on("click", pause)
-      d3.select("#buttons").append("button").attr("class","btn").html("Start Animation").on("click", start)
+      d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
+      d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
+      d3.select("#buttons").append("button").attr("class","btn").html("Planet Radius").on("click", function() {colorbyfeature("rad")})
       d3.select("#buttons").append("button").attr("class","btn").html("Number of Planets in System").on("click", function() {colorbyfeature("plnum")})
       d3.select("#buttons").append("button").attr("class","btn").html("Orbital Period").on("click", function() {colorbyfeature("orbper")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Radius").on("click", function() {colorbyfeature("rad")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
       d3.select("#buttons").append("button").attr("class","btn").html("Discovery Year").on("click", function() {colorbyfeature("discyear")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Discovery Method").on("click", function() {colorbyfeature("discmeth")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Reset").on("click", function() {window.location.reload()})
+      d3.select("#buttons").append("button").attr("class","btn").attr("id", "lastcolorbtn").html("Discovery Method").on("click", function() {colorbyfeature("discmeth")})
 
       createGradients();
 
@@ -122,31 +120,31 @@
       // color function
       function colorbyfeature(feature){
         if (feature == "plnum"){
-          var colors = rainbowify(orbit.minPlanetsperSystem(), orbit.maxPlanetsperSystem());
+          var colors = rainbowify(orbit.minPlanetsperSystem(), orbit.maxPlanetsperSystem(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});          
         }
         if (feature == "orbper"){
           var colors = rainbowify(Math.log(orbit.minOrbitalPeriod()), Math.log(orbit.maxOrbitalPeriod()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.orbital_period - orbit.minOrbitalPeriod())) : "lightgray"});
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.orbital_period - orbit.minOrbitalPeriod()))) : "lightgray"});
         }
         if (feature == "pltemp"){
-          var colors = rainbowify(orbit.minPlanetTemp(), orbit.maxPlanetTemp());
+          var colors = rainbowify(orbit.minPlanetTemp(), orbit.maxPlanetTemp(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.planet_temp) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
         }
         if (feature == "rad"){
-          var colors = rainbowify(orbit.minPlanetRadius(), orbit.maxPlanetRadius());
+          var colors = rainbowify(orbit.minPlanetRadius(), orbit.maxPlanetRadius(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.radius) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.radius - orbit.minPlanetRadius())) : "lightgray"});
         }
         if (feature == "dist"){
-          var colors = rainbowify(orbit.minDistance(), orbit.maxDistance());
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.light_years - orbit.minDistance())) : "lightgray"});
+          var colors = rainbowify(Math.log(orbit.minDistance()), Math.log(orbit.maxDistance()));
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.light_years - orbit.minDistance()))) : "lightgray"});
         }
         if (feature == "discyear"){
-          var colors = rainbowify(orbit.minDiscoveryYear(), orbit.maxDiscoveryYear());
+          var colors = rainbowify(orbit.minDiscoveryYear(), orbit.maxDiscoveryYear(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.discovery_year) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.discovery_year - orbit.minDiscoveryYear()) : "lightgray"});        
         }
         if (feature == "discmeth"){
-          var colors = rainbowify(0, Object.keys(planetDiscMethods).length-1);
+          var colors = rainbowify(0, Object.keys(planetDiscMethods).length-1, reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? d.discovery_method == "NA" ? "black": colors.colourAt(planetDiscMethods[d.discovery_method]) : "lightgray"});
         }
       }
@@ -158,12 +156,16 @@
       function pause(){
         orbit.stop();
         shouldbepaused = true;
+        d3.select("#buttons").append("button").attr("class","btn").attr("id", "startbutton").html("Start Animation").on("click", start);
+        d3.select("#pausebutton").remove();
       }
 
       //start function
       function start(){
         orbit.start();
-        shouldbepaused = false;        
+        shouldbepaused = false;
+        d3.select("#buttons").append("button").attr("class","btn").attr("id", "pausebutton").html("Pause Animation").on("click", pause);
+        d3.select("#startbutton").remove();        
       }
       // sets the behavior for when the cursor goes over a node (planet)
       function nodeOver(d) {
@@ -176,45 +178,30 @@
         .style("stroke", "black")
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1+1 : d.radius*0.5+1+1 : 50+2 })
         .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 0});    
-      }
 
-      // Kevin: I reset nodeOver from nodeOver2 to nodeOver above, this contains the zooming functionality.
-
-      function nodeOver2(d) {
-        orbit.stop();
-
-        var texttodisplay = d3.select(this).attr(function(d) {return d.star_name + d.star_temp})
-        console.log(texttodisplay)
-        
-        d3.select("h2 span").text("")
-          .append("p").text("TEST").style("font-size", "18px").style("color", "white")
-                                
-
-        // var bar = d3.select(this)
-        //             .selectAll("g")
-        //             .data(data)
-        //             .enter().append("g")
-        //             //.attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
-
-        //   bar.append("rect")
-        //     .attr("width", 50)
-        //     .attr("height", 20);
-
-        //   bar.append("text")
-        //     .text(function(d){return d.star_name})
-        //     .attr("x",0)
-        //     .attr("y", 20)
-        //     .style("fill", "white")
-
-        // d3.selectAll("g.node")
-        //   .append("p").text(d.star_name)
-        //   //.append("p").text(d.planet_letter)
-        //   //.append("p").text(d.orbital_period)
-        //   //.append("p").text(d.star_temp)
-        //   //.append("p").text(d.star_radius)
-        //   .style("text-anchor", "middle")
-       
-      
+        if (!d.radius){
+          d3.select("h2 span")
+          //.append("text")
+          //.text(function(d,i){return d.star_name + d.star_temp})
+          .text("")
+          .append("p").text("Planet Name: " + d.key).style("color", "white")
+          .append("p").text("Planet Temperature (K): " + d.planet_temp).style("color", "white")
+          .append("p").text("Planet Radius (Earth radii): " + 1).style("color", "white")
+          .append("p").text("Number of Planets in Solar System: " + d.pl_pnum).style("color", "white");
+        } else {
+          d3.select("h2 span")
+          //.append("text")
+          //.text(function(d,i){return d.star_name + d.star_temp})
+          .text("")
+          .append("p").text("Planet Name: " + d.key).style("color", "white")
+          .append("p").text("Distance From Earth (Light-years): " + d.light_years).style("color", "white")          
+          .append("p").text("Planet Temperature (K): " + d.planet_temp).style("color", "white")
+          .append("p").text("Planet Radius (Earth radii): " + d.radius).style("color", "white")
+          .append("p").text("Number of Planets in Solar System: " + d.pl_pnum).style("color", "white")          
+          .append("p").text("Orbital Period (days): " + d.orbital_period).style("color", "white")
+          .append("p").text("Discovery Year: " + d.discovery_year).style("color", "white")
+          .append("p").text("Discovery Method: " + d.discovery_method).style("color", "white");
+        }
       }
 
       // sets the behavior for when the cursor leaves a node (planet)
@@ -225,28 +212,24 @@
           d3.selectAll("g.node > circle")
           .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 48 })
           .style("stroke", function(d) {return d.depth == 0 ? "black" : "transparent"})
-          .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.25}); 
+          .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.25});
+
+          d3.select("h2 span").selectAll("p").remove()
       }
     }
-      function nodeOut2() {
-         d3.select(this)
-          .select("text").remove();
-      }
-    
-    
   </script>
   
   <!-- run the makeViz() code on page load -->
   <body onload=makeViz()>
+    <h2><span></span></h2>
       <!-- add the star background -->
       <div class="stars"></div>
       <!-- add twinkling -->
       <!-- <div class="twinkling"></div> -->
-      <div id="viz" align="center"> <!-- Place the viz here -->
+      <div id="viz" align="center" align="top"> <!-- Place the viz here -->
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
       </div>
-      <h2><span></span></h2>
   </body>
   <footer>
   </footer>
