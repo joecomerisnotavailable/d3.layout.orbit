@@ -1,3 +1,4 @@
+
 d3.layout.orbit = function() {
 	var currentTickStep = 0;
 	var orbitNodes;
@@ -47,6 +48,7 @@ d3.layout.orbit = function() {
 			orbitDispatch.tick(); // send a message to the html to redraw the planets
 		}, 
 		1);
+	
 	}
 
 	// function to stop the spinning
@@ -145,10 +147,13 @@ d3.layout.orbit = function() {
 	function calculateNodes() {
 		var _data = nestedNodes; 
 		//If you have an array of elements, then create a root node (center)
-		orbitNodes = {key: "root", values: _data}
+		orbitNodes = {key: "Earth", values: _data}
 		orbitNodes.x = orbitSize[0] / 2; // finds the center of the visualization
 		orbitNodes.y = orbitSize[1] / 2; // finds the center of the visualization
 		orbitNodes.depth = 0; // the root node (the center) has depth 0
+		orbitNodes.planet_temp = 252;
+		orbitNodes.light_years = 0;
+		orbitNodes.pl_pnum = 8;
 
 		// add this data with a new center as the key to flattenedNodes
 		flattenedNodes.push(orbitNodes);
