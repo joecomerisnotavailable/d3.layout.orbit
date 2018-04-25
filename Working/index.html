@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
   </head>
   <!-- Place the javascript source code links here -->
-  <script src="src/d3.min.js"></script>
+  <script src="../src/d3.min.js"></script>
   <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
-  <script src="src/rainbowvis.js"></script>
-  <script src="src/svg-pan-zoom.js"></script>
+  <script src="../src/rainbowvis.js"></script>
+  <script src="../src/svg-pan-zoom.js"></script>
   <script src="gradients.js"></script>
   <script>
 
     // this function sends the data to the draw orbit function
     // ran onload of page
     function makeViz() {
-      d3.json("exoplanet_data/planets.json", function(data) {drawOrbit(data)});
+      d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
     }
 
     planetDiscMethods = {"Imaging":0, "Transit":1, "Orbital Brightness Modulation":2, "Radial Velocity":3, "Transit Timing Variations":4, 
@@ -99,7 +99,6 @@
         .style("stroke-width", 0.25)
         .attr("id", "gradientplanet");
 
-      d3.select("#buttons").append("start").attr("class","btn").html("Start Introduction").on("click", function() {Draw0})
       d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
       d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
       d3.select("#buttons").append("button").attr("class","btn").html("Planet Radius").on("click", function() {colorbyfeature("rad")})
@@ -228,7 +227,6 @@
       <!-- add twinkling -->
       <!-- <div class="twinkling"></div> -->
       <div id="viz" align="center" align="top"> <!-- Place the viz here -->
-        <div id="richturd"></div> <!-- Place text here -->
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
       </div>
