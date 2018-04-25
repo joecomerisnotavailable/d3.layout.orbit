@@ -284,7 +284,8 @@ window.onresize = updateWindow;
 
 
 //The explanation text during the introduction
-var TextTop = d3.select("#richturd").append("text")
+var TextTop = d3.select("#richturd").append("p")
+//("text")
 	.attr("class", "explanation")
 	.attr("x", 0 + "px")
 	.attr("y", -70 + "px")
@@ -296,7 +297,14 @@ var TextTop = d3.select("#richturd").append("text")
 //Create the legend
 //createLegend();
 
-
+//Taken from https://groups.google.com/forum/#!msg/d3-js/WC_7Xi6VV50/j1HK0vIWI-EJ
+//Calls a function only after the total transition ends
+function endall(transition, callback) {
+	var n = 0;
+	transition
+		.each(function() { ++n; })
+		.each("end", function() { if (!--n) callback.apply(this, arguments); });
+}
 
 //Change the text during introduction
 function changeText (newText, delayDisappear, delayAppear, xloc, yloc, finalText) {
