@@ -221,3 +221,173 @@ d3.layout.orbit = function() {
 	}
 
 }
+
+
+// code below this line taken from
+// https://github.com/nbremer/
+
+
+//Taken from http://bl.ocks.org/mbostock/7555321
+//Wraps SVG text
+function wrap(text, width) {
+	var text = d3.select(this[0][0]),
+		words = text.text().split(/\s+/).reverse(),
+		word,
+		line = [],
+		lineNumber = 0,
+		lineHeight = 1.4, // ems
+		y = text.attr("y"),
+		x = text.attr("x"),
+		dy = parseFloat(text.attr("dy")),
+		tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+
+	while (word = words.pop()) {
+	  line.push(word);
+	  tspan.text(line.join(" "));
+	  if (tspan.node().getComputedTextLength() > width) {
+		line.pop();
+		tspan.text(line.join(" "));
+		line = [word];
+		tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+	  }
+	}
+};
+
+
+
+//Outline taken from http://stackoverflow.com/questions/16265123/resize-svg-when-window-is-resized-in-d3-js
+function updateWindow(){
+	x = (w.innerWidth || e.clientWidth || g.clientWidth) - 50;
+	y = (w.innerHeight|| e.clientHeight|| g.clientHeight) - 50;
+
+	svg2.attr("width", x).attr("height", y);
+	d3.selectAll(".container").attr("transform", "translate(" + x/2 + "," + y/2 + ")");
+	d3.selectAll(".legendContainer").attr("transform", "translate(" + 30 + "," + (y - 90) + ")");
+	d3.select("#crazy").style("left", (x/2 - 112/2 + 6) + "px").style("top", (y/2 - 100) + "px");
+	//d3.selectAll(".introWrapper").attr("transform", "translate(" + -x/2 + "," + -y/2 + ")");
+}//updateWindow
+
+var
+	w = window,
+	d = document,
+	e = d.documentElement,
+	g = d.getElementsByTagName('body')[0],
+	x = (w.innerWidth || e.clientWidth || g.clientWidth) - 50,
+	y = (w.innerHeight|| e.clientHeight|| g.clientHeight) - 50;
+
+window.onresize = updateWindow;
+
+
+///////////////////////////////////////////////////////////////////////////
+//////////////////////////// Explanation Texts ////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+
+//The explanation text during the introduction
+var TextTop = d3.select("#richturd").append("p")
+//("text")
+	.attr("class", "explanation")
+	.attr("x", 0 + "px")
+	.attr("y", -70 + "px")
+	.attr("dy", "1em")
+	.style("fill","white")
+	.attr("opacity", 0)
+	.text("");
+
+//Create the legend
+//createLegend();
+
+//Taken from https://groups.google.com/forum/#!msg/d3-js/WC_7Xi6VV50/j1HK0vIWI-EJ
+//Calls a function only after the total transition ends
+function endall(transition, callback) {
+	var n = 0;
+	transition
+		.each(function() { ++n; })
+		.each("end", function() { if (!--n) callback.apply(this, arguments); });
+}
+
+//Change the text during introduction
+function changeText (newText, delayDisappear, delayAppear, xloc, yloc, finalText) {
+
+	//If finalText is not provided, it is not the last text of the Draw step
+	if(typeof(finalText)==='undefined') finalText = false;
+
+	if(typeof(xloc)==='undefined') xloc = 0;
+	if(typeof(yloc)==='undefined') yloc = -200;
+
+	TextTop
+		//Current text disappear
+		.transition().delay(700 * delayDisappear).duration(700)
+		.attr('opacity', 0)
+		//New text appear
+		.call(endall,  function() {
+			TextTop.text(newText)
+			.attr("y", yloc + "px")
+			.attr("x", xloc + "px")
+			.call(wrap, 300)
+			;
+		})
+		.transition().delay(700 * delayAppear).duration(700)
+		.attr('opacity', 1)
+		;
+}// function changeTopText
+
+///////////////////////////////////////////////////////////////////////////
+//////////////////////// Storytelling steps ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+function Draw0(){
+
+	//stopTooltip = true;
+
+	//Make other buttons invisible as to not distract
+	//d3.select("#start").transition().duration(1000).style("opacity", 0);
+	//Remove button
+	//setTimeout(function() {
+	//	d3.select("#start")
+	//		.style("visibility","hidden");
+	//	}, 1200);
+
+
+	//Make legend invisible as to not distract
+	//d3.select(".legendContainer").transition().duration(1000).style("opacity", 0);
+	//d3.select(".introWrapper").transition().duration(1000).style("opacity", 0);
+
+	//Remove event listeners during examples
+	//removeEvents();
+
+	//Start
+	changeText("Let me introduce you to this chaos of exoplanets that orbit many " +
+			   "different stars in our Milky Way",
+				delayDisappear = 0, delayAppear = 1);
+
+
+	changeText("Here we have WASP-12 b, one of the biggest planets in our dataset. " +
+			   "Its radius is more than 20x bigger than Earth",
+				delayDisappear = 7, delayAppear = 8);
+
+
+	changeText("As comparison, here we have Kepler-68 c, which is about the same size as Earth. " +
+			   "It's so small in comparison to the rest that you can barely see it",
+				delayDisappear = 16, delayAppear = 17);
+
+	changeText("As a note, although the sizes of the planet are scaled, and the orbits are scaled, " +
+			   "they are not scaled to each other. Otherwise most planets would become smaller than " +
+			   "a pixel if I keep them on these orbits. ",
+				delayDisappear = 27, delayAppear = 28);
+
+	changeText("Scaling the planetary radii to the orbits would give you this result. " +
+			   "(The star in the center was already scaled to our Sun)",
+				delayDisappear = 0, delayAppear = 3);
+	changeText("Let's get back to WASP-12 b. The distance to the star it orbits is only 2% of the distance " +
+			   "between the Earth and the Sun",
+				delayDisappear = 0, delayAppear = 3);
+
+	changeText("The distance between the Earth and the Sun is 150 million kilometers " +
+			   "and is called an Astronomical Unit, or 'au'. Thus the distance of WASP-12 b to its star is 0.02 au",
+				delayDisappear = 12, delayAppear = 13);
+
+	changeText("This is extremely close. Even Mercury, the planet closest to our Sun, is stil 0.3 au away, which " +
+			   "would not fit on most regular screen sizes ",
+				delayDisappear = 24, delayAppear = 25);
+}
