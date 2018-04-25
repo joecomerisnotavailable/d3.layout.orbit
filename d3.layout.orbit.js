@@ -260,7 +260,7 @@ function updateWindow(){
 	x = (w.innerWidth || e.clientWidth || g.clientWidth) - 50;
 	y = (w.innerHeight|| e.clientHeight|| g.clientHeight) - 50;
 
-	svg.attr("width", x).attr("height", y);
+	svg2.attr("width", x).attr("height", y);
 	d3.selectAll(".container").attr("transform", "translate(" + x/2 + "," + y/2 + ")");
 	d3.selectAll(".legendContainer").attr("transform", "translate(" + 30 + "," + (y - 90) + ")");
 	d3.select("#crazy").style("left", (x/2 - 112/2 + 6) + "px").style("top", (y/2 - 100) + "px");
@@ -277,50 +277,14 @@ var
 
 window.onresize = updateWindow;
 
-//Create SVG
-var svg = d3.select("#planetarium").append("svg")
-	.attr("width", x)
-    .attr("height", y);
-
-//Create a container for everything with the centre in the middle
-var container = svg.append("g").attr("class","container")
-					.attr("transform", "translate(" + x/2 + "," + y/2 + ")")
-
 
 ///////////////////////////////////////////////////////////////////////////
 //////////////////////////// Explanation Texts ////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-//Intro Text Wrapper
-var introText = svg.append("g").attr("class", "introWrapper");
-					//.attr("transform", "translate(" + -x/2 + "," + -y/2 + ")");
-//Title
-var Title = introText.append("text")
-	.attr("class", "title")
-	.attr("x", 10 + "px")
-	.attr("y", 10 + "px")
-	.attr("dy", "1em")
-	.style("fill","white")
-	.attr("opacity", 1)
-	.text("EXOPLANETS");
-
-//Intro text
-var TextIntro = introText.append("text")
-	.attr("class", "intro")
-	.attr("x", 10 + "px")
-	.attr("y", 40 + "px")
-	.attr("dy", "1em")
-	.style("fill","white")
-	.attr("opacity", 1)
-	.text("Since the definitive discovery of the first exoplanet in 1992 "+
-		  "more than 1800 exoplanets have been found. Depending on circumstances and method of discovery " +
-		  "we might know enough of the exoplanet to simulate its orbit. " +
-		  "Here you can see 288 exoplanets from exoplanets.org for which we know the eccentricity and " +
-		  "semi-major axis of the orbit, radius of the planet and (effective) temperature of the star which it orbits");
-	//.call(wrap, 300);
 
 
 //The explanation text during the introduction
-var TextTop = container.append("text")
+var TextTop = d3.select("#richturd").append("text")
 	.attr("class", "explanation")
 	.attr("x", 0 + "px")
 	.attr("y", -70 + "px")
@@ -332,73 +296,33 @@ var TextTop = container.append("text")
 //Create the legend
 //createLegend();
 
-//Initiate the progress Circle
-var arc = d3.svg.arc()
-	.innerRadius(10)
-	.outerRadius(12);
-progressCircle(8);
-
-///////////////////////////////////////////////////////////////////////////
-//////////////////////// Set up pointer events ////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-//Reload page
-d3.select("#reset").on("click", function(e) {location.reload();});
-
-//Show information
-d3.select("#info").on("click", showInfo);
-
-//Remove info
-d3.select("#infoClose").on("click", closeInfo);
-
-//Skip intro
-d3.select("#remove")
-	.on("click", function(e) {
-
-		//Remove all non needed text
-		d3.select(".introWrapper").transition().style("opacity", 0);
-		d3.select("#start").transition().style("opacity", 0);
-		d3.select(".explanation").transition().style("opacity", 0);
-		d3.select(".progressWrapper").transition().style("opacity", 0);
-
-		//Make skip intro less visible, since now it doesn't work any more
-		d3.select("#remove")
-			.transition().duration(1000)
-			.style("pointer-events", "none")
-			.style("opacity",0.3);
-
-		//Legend visible
-		d3.select(".legendContainer").transition().style("opacity", 1);
-		//Bring all planets back
-		dim(delayTime = 0);
-		bringBack(opacity = planetOpacity, delayTime=1);
-
-		//Reset any event listeners
-		resetEvents();
-	});
 
 
-///////////////////////////////////////////////////////////////////////////
-////////////////////// Start introductions steps //////////////////////////
-///////////////////////////////////////////////////////////////////////////
+//Change the text during introduction
+function changeText (newText, delayDisappear, delayAppear, xloc, yloc, finalText) {
 
-//Start introduction
-d3.select("#start")
-	.on("click", Draw0);
+	//If finalText is not provided, it is not the last text of the Draw step
+	if(typeof(finalText)==='undefined') finalText = false;
 
-var counter = 1;
-//Order of steps when clicking button
-d3.select(".progressWrapper")
-	.on("click", function(e){
+	if(typeof(xloc)==='undefined') xloc = 0;
+	if(typeof(yloc)==='undefined') yloc = -200;
 
-		if(counter == 1) Draw1();
-		else if(counter == 2) Draw2();
-		else if(counter == 3) Draw3();
-		else if(counter == 4) Draw4();
-		else if(counter == 5) Draw5();
-		else if(counter == 6) Draw6();
-
-		counter = counter + 1;
-	});
+	TextTop
+		//Current text disappear
+		.transition().delay(700 * delayDisappear).duration(700)
+		.attr('opacity', 0)
+		//New text appear
+		.call(endall,  function() {
+			TextTop.text(newText)
+			.attr("y", yloc + "px")
+			.attr("x", xloc + "px")
+			.call(wrap, 300)
+			;
+		})
+		.transition().delay(700 * delayAppear).duration(700)
+		.attr('opacity', 1)
+		;
+}// function changeTopText
 
 ///////////////////////////////////////////////////////////////////////////
 //////////////////////// Storytelling steps ///////////////////////////////
@@ -406,35 +330,29 @@ d3.select(".progressWrapper")
 
 function Draw0(){
 
-	stopTooltip = true;
+	//stopTooltip = true;
 
 	//Make other buttons invisible as to not distract
-	d3.select("#start").transition().duration(1000).style("opacity", 0);
+	//d3.select("#start").transition().duration(1000).style("opacity", 0);
 	//Remove button
-	setTimeout(function() {
-		d3.select("#start")
-			.style("visibility","hidden");
-		}, 1200);
+	//setTimeout(function() {
+	//	d3.select("#start")
+	//		.style("visibility","hidden");
+	//	}, 1200);
 
 
 	//Make legend invisible as to not distract
-	d3.select(".legendContainer").transition().duration(1000).style("opacity", 0);
-	d3.select(".introWrapper").transition().duration(1000).style("opacity", 0);
+	//d3.select(".legendContainer").transition().duration(1000).style("opacity", 0);
+	//d3.select(".introWrapper").transition().duration(1000).style("opacity", 0);
 
 	//Remove event listeners during examples
-	removeEvents();
+	//removeEvents();
 
 	//Start
-	startCircle(time = 29);
-
 	changeText("Let me introduce you to this chaos of exoplanets that orbit many " +
 			   "different stars in our Milky Way",
 				delayDisappear = 0, delayAppear = 1);
-	//Dim all planets
-	dim(delayTime=0);
 
-	//Highlight the biggest planet
-	highlight(235, delayTime=8);
 
 	changeText("Here we have WASP-12 b, one of the biggest planets in our dataset. " +
 			   "Its radius is more than 20x bigger than Earth",
@@ -445,54 +363,14 @@ function Draw0(){
 			   "It's so small in comparison to the rest that you can barely see it",
 				delayDisappear = 16, delayAppear = 17);
 
-	//Highlight an Earth like chosen planet
-	highlight(215, delayTime=17);
-
 	changeText("As a note, although the sizes of the planet are scaled, and the orbits are scaled, " +
 			   "they are not scaled to each other. Otherwise most planets would become smaller than " +
 			   "a pixel if I keep them on these orbits. ",
 				delayDisappear = 27, delayAppear = 28);
 
-}//function Draw0
-
-//Scaling radii
-function Draw1() {
-
-	startCircle(time = 5);
-
 	changeText("Scaling the planetary radii to the orbits would give you this result. " +
 			   "(The star in the center was already scaled to our Sun)",
 				delayDisappear = 0, delayAppear = 3);
-
-	//Dim all planets
-	dim(delayTime = 0);
-	//Bring all planets back
-	bringBack(opacity = planetOpacity, delayTime = 1);
-
-	d3.selectAll(".planet")
-		.transition().delay(700 * 2).duration(2000)
-		.attr("r", function(d) {
-			var newRadius = radiusJupiter/au*3000*d.Radius;
-			if  (newRadius < 1) {return 0;}
-			else {return newRadius;}
-		});
-
-}//function Draw1
-
-//Radius of orbit
-function Draw2() {
-
-	startCircle(time = 26);
-
-	//Dim all planets again
-	dim(delayTime = 0);
-	//Make planets bigger again
-	d3.selectAll(".planet")
-		.transition().delay(700 * 1).duration(1500)
-		.attr("r", function(d) {return radiusSizer * d.Radius;});
-
-	//Highlight the biggest planet
-	highlight(235, delayTime=4);
 	changeText("Let's get back to WASP-12 b. The distance to the star it orbits is only 2% of the distance " +
 			   "between the Earth and the Sun",
 				delayDisappear = 0, delayAppear = 3);
@@ -504,220 +382,4 @@ function Draw2() {
 	changeText("This is extremely close. Even Mercury, the planet closest to our Sun, is stil 0.3 au away, which " +
 			   "would not fit on most regular screen sizes ",
 				delayDisappear = 24, delayAppear = 25);
-}//Draw2
-
-//Orbital period
-function Draw3(){
-	startCircle(time = 18);
-
-	changeText("The planets you see here are quite different from Earth because of more reasons. " +
-			   "The average time it takes these 288 planets to go around their star is only 17 Earth days! ",
-				delayDisappear = 0, delayAppear = 1);
-
-	changeText("WASP-12 b goes around in just 26 hours",
-				delayDisappear = 11, delayAppear = 12);
-
-	//Highlight an Earth like chosen planet
-	highlight(215, delayTime=16);
-	changeText("and Kepler-68 c in almost 10 days",
-				delayDisappear = 16, delayAppear = 17);
-
-}//Draw3
-
-
-//Elliptical orbits - Circles
-function Draw4(){
-
-	//Start progress button
-	startCircle(time = 22);
-
-	changeText("Both of the planets highlighted now are on very circular orbits. " +
-			   "However, this is not always the case",
-				delayDisappear = 0, delayAppear = 1);
-
-	changeText("Most orbits are shaped more like stretched out circles: ellipses. " +
-			   "The 'eccentricity' describes how round or how stretched out an ellipse is",
-				delayDisappear = 10, delayAppear = 11);
-
-	changeText("If the eccentricity is close to 0, the ellipse is more like a circle, " +
-			   "like our planets here. However, if the eccentricity is close to 1, " +
-			   "the ellipse is long and skinny",
-				delayDisappear = 20, delayAppear = 21);
-
-}//Draw4
-
-//Elliptical orbits
-function Draw5() {
-
-	//Start progress button
-	startCircle(time = 10);
-
-	changeText("Here we have Kepler-75 b, which is already on a very stretched orbit. " +
-			   "Its eccentricity is 0.57",
-				delayDisappear = 1, delayAppear = 2, xloc=200, yloc = -24*1);
-
-	//Dim all planets again
-	dim(delayTime = 0);
-
-	//Highlight elliptical orbit
-	highlight(237, delayTime=2);
-
-	changeText("Let me speed things up a bit. Do you see that the planet is moving faster " +
-			   "when it is close to the star? If you want to know why that happens, " +
-			   "please look up Kepler's 2nd law",
-				delayDisappear = 8, delayAppear = 9, xloc=200, yloc = -24*2);
-
-
-	setTimeout(function() {speedUp = 50;}, 700*8);
-
-}//Draw5
-
-//Colour of the planet
-function Draw6() {
-
-	//Return planets to original speed
-	speedUp = 400;
-
-	//Start progress button
-	startCircle(time = 33);
-
-	//Dim all planets again
-	dim(delayTime = 0);
-
-	//Bring all planets back
-	bringBack(opacity = 0.3, delayTime = 1);
-
-	changeText("Wondering about the color of the planets? They are colored according to " +
-			   "the approximate color of the star around which they orbit",
-				delayDisappear = 0, delayAppear = 1);
-
-	changeText("Depending on the mass of a star, its temperature is different and therefore " +
-			   "the color in which we see it",
-				delayDisappear = 8, delayAppear = 9);
-
-	changeText("You can hover over the legend in the bottom right to highlight only planets " +
-			  "that rotate around similar stars",
-				delayDisappear = 16, delayAppear = 17);
-
-	//Make legend invisible as to not distract
-	d3.select(".legendContainer").transition().delay(17 * 700).duration(2000).style("opacity", 1);
-	//Replace Legend events
-	d3.selectAll('.legend')
-		.on("mouseover", classSelect(0.04))
-		.on("mouseout", classSelect(planetOpacity));
-
-	changeText("I'll admit, this coloring might be a bit confusing, since now they seem like little stars " +
-			   "orbiting our Sun",
-				delayDisappear = 24, delayAppear = 25);
-
-
-	changeText("However, seeing that we've come to the end of the introduction, I'll let you " +
-			   "decide what you like best...",
-				delayDisappear = 32, delayAppear = 33);
-
-	d3.select(".progressWrapper")
-			.transition().delay(700 * 35).duration(1000)
-			.style("opacity", 0);
-
-	d3.select("#crazy")
-		.style("visibility","visible")
-		.style("left", (x/2 - 112/2 + 6) + "px")
-		.style("top", (y/2 - 100) + "px")
-		.transition().delay(700 * 35).duration(1000)
-		.style("opacity", 1);
-
-}//Draw6
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////
-//////////////////////////// Progress circle //////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-
-function progressCircle(time) {
-//Create a small icon that starts when an animation is going on
-var progressWrapper = container.append("g")
-		.attr("class", "progressWrapper")
-		.attr("transform", "translate(0,-220)")
-		.style("pointer-events", "none");
-
-//Circle in the back so the whole thing becomes clickable
-var backCircle =  progressWrapper.append("circle")
-	.attr("r", 12)
-	.style("opacity", 0.01);
-
-//Create the play button
-var play =  progressWrapper.append("path")
-	.attr("class", "play")
-	.attr("d", d3.svg.symbol().type("triangle-up").size(35))
-	.style("fill","#3B3B3B")
-	.attr("transform", "translate(1,0) rotate(90)")
-	.style("opacity", 0);
-
-/*
-//Create pause icon
-var pause = container.selectAll(".pause")
-				.data([-5,2])
-				.enter()
-				.append("rect")
-				.attr("transform", "translate(0,-200)")
-				.attr("x", function (d) {console.log(d); return d;})
-				.attr("y",  -5)
-				.attr("width", 3)
-				.attr("height", 10)
-				.style("fill", "white");
-*/
-
-/*
-//The circle, already created in main script
-var arc = d3.svg.arc()
-	.innerRadius(10)
-	.outerRadius(12);
-*/
-
-//Create the arc around the play button
-var progress = progressWrapper.append("path")
-	.datum({startAngle: 0,endAngle: 2*Math.PI})
-	.attr("class", "playCircle")
-	.style("fill", "white")
-	.style("opacity", 0)
-	.attr("d", arc);
-
-};
-
-function startCircle(time) {
-
-	//Stop click event
-	d3.select(".progressWrapper")
-		.style("pointer-events", "none");
-
-	//Dim the play button
-	d3.selectAll(".play")
-		.transition().delay(0).duration(500)
-		.style("opacity", 1)
-		.style("fill","#3B3B3B")
-		.transition().delay(700 * time)
-		.style("fill","white")
-		;
-
-	//Run the circle and at the end
-	d3.selectAll(".playCircle")
-		.style("opacity", 1)
-		.transition().duration(700 * time).ease("linear")
-		.attrTween("d", function(d) {
-		   var i = d3.interpolate(d.startAngle, d.endAngle);
-		   return function(t) {
-				d.endAngle = i(t);
-				return arc(d);
-		   }//return
-		})
-		.call(endall, function() {
-			d3.select(".progressWrapper")
-				.style("pointer-events", "auto");
-		});
-};
+}
