@@ -15,7 +15,7 @@
     // this function sends the data to the draw orbit function
     // ran onload of page
     function makeViz() {
-      d3.json("../exoplanet_data/KOI-351.json", function(data) {drawOrbit(data)});
+      d3.json("../exoplanet_data/stars/KOI-351.json", function(data) {drawOrbit(data)});
     }
 
     planetDiscMethods = {"Imaging":0, "Transit":1, "Orbital Brightness Modulation":2, "Radial Velocity":3, "Transit Timing Variations":4, 
