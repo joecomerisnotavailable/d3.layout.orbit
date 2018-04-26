@@ -1,0 +1,9 @@
+function filterJSON(json, key, value) {
+  var result = {};
+  for (var explosionIndex in json) {
+    if (json[explosionIndex][key] === value) {
+      result[explosionIndex] = json[explosionIndex];
+    }
+  }
+  return result;
+}
