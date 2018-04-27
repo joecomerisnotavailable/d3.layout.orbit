@@ -78,6 +78,7 @@
       .on("mouseover", nodeOver)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
+      .on("click", clickedplanet)
       
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
@@ -252,6 +253,10 @@
          .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 1});   
 
           d3.select("h2 span").selectAll("p").remove()
+      }
+
+      function clickedplanet(d) {
+          console.log(d.star_name)
       }
     }
   </script>
