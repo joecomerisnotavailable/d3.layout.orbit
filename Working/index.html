@@ -187,8 +187,8 @@
         }
         if (feature == "orbper"){
           var colors = rainbowify(Math.log10(orbit.minOrbitalPeriod()), Math.log10(orbit.maxOrbitalPeriod()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.orbital_period))) : "lightgray"});
-          var colorsforlegend = colordictionary(Math.round(Math.log10(orbit.maxOrbitalPeriod())), Math.round(Math.log10(orbit.minOrbitalPeriod()), boxes=8));
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log10(d.orbital_period))) : "lightgray"});
+          var colorsforlegend = colordictionary(Math.round(Math.log10(orbit.maxOrbitalPeriod())), Math.round(Math.log10(orbit.minOrbitalPeriod())));
           colorize(colorsforlegend, colors, units=" Days", logscale=true)
         }
         if (feature == "pltemp"){
@@ -205,7 +205,6 @@
         }
         if (feature == "dist"){
           var colors = rainbowify(Math.log10(orbit.minDistance()), Math.log10(orbit.maxDistance()));
-
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.floor(Math.log10(d.light_years))) : "lightgray"});
           var colorsforlegend = colordictionary(Math.floor(Math.log10(orbit.maxDistance())), Math.floor(Math.log10(orbit.minDistance())));
           colorize(colorsforlegend, colors, units=" Light-Years", logscale=true)
