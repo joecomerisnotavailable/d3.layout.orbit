@@ -161,3 +161,11 @@ p {
     color:darkslategray;
     outline:none;
   }
+
+.box {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  border: 2px solid;
+  z-index: 500;
+}
