@@ -168,4 +168,16 @@ p {
   width: 20px;
   border: 2px solid;
   z-index: 500;
+  color: black;
+}
+
+#container {
+  position:absolute;
+  bottom: 2%;
+  right: 2%;
+  font-size: 16px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: white;
+  opacity: 0.7;
+  z-index: 500;
 }
