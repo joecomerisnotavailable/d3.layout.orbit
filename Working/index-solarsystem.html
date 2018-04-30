@@ -198,7 +198,7 @@
         orbit.stop();
 
         if ((d.star_temp != 'NA') && (d.star_radius != 'NA')){
-          hab.push((+d.star_temp*(+d.star_radius))/10)
+          hab.push((+d.star_temp*(+d.star_radius))/25)
         }
 
         console.log(hab)
@@ -225,7 +225,7 @@
               }})
             .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
             .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
-            .style("stroke-width", function(d) {return d.depth == 0 ? 30 : 3});
+            .style("stroke-width", function(d) {return d.depth == 0 ? 50 : 3});
         if (!d.radius){
           d3.select("h2 span")
           //.append("text")
