@@ -197,8 +197,10 @@
         // stop the animation
         orbit.stop();
 
-        if ((d.star_temp != 'NA') && (d.star_radius != 'NA')){
+        if ((d.depth != 0) && (d.star_temp != 'NA') && (d.star_radius != 'NA')){
           hab.push((+d.star_temp*(+d.star_radius))/25)
+        } else {
+          hab.push(random)
         }
 
         console.log(hab)
