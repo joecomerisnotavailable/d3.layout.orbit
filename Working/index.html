@@ -28,7 +28,64 @@
         rainbow.setSpectrum('blue', 'lime', 'yellow', 'red')
       }
       rainbow.setNumberRange(0, numberOfItems);
+
       return rainbow;
+    }
+    
+    // legend
+    //function to create a dictionary used by the legend
+    colordictionary = function(max, min, boxes = 5){
+      var spread = max - min;
+      var jump = Math.round(spread / boxes);
+      var colordict = {};
+      for(var i = 0; i < spread; i+=jump){
+        var key = min + i;
+        colordict[key] = i;
+      }
+      colordict[max] = max-min;       
+      return colordict
+    }
+
+    // function to sort a dictionary, needed for the orbital period bc decimals appended at end otherwise
+    function sortOnKeys(dict) {
+      var sorted = [];
+      for(var key in dict) {
+          sorted[sorted.length] = key;
+      }
+      sorted.sort();
+      return sorted;
+    }
+    // function to create legend
+    colorize = function(namedict, colorList, units = "", logscale =false) {
+      d3.select("#container").selectAll("div").remove();
+      var container = document.getElementById('container');
+      
+      usedict = namedict;
+      if (logscale){
+        namedict = sortOnKeys(namedict);
+      }
+      for (var key in namedict) {
+        var boxContainer = document.createElement("DIV");
+        var box = document.createElement("DIV");
+        var label = document.createElement("SPAN");
+        
+        color = usedict[key]
+        if (logscale){
+          console.log(namedict[key]);
+          label.innerHTML = " " + (10**namedict[key]).toString() + units;
+          color=usedict[namedict[key]]
+        } else {
+          label.innerHTML = " " + key + units;
+        }
+        
+        box.className = "box";
+        box.style.backgroundColor = colorList.colourAt(Math.round(color));
+
+        boxContainer.appendChild(box);
+        boxContainer.appendChild(label);
+
+        container.appendChild(boxContainer);
+      }
     }
  
     // this creates random arrays for the planet speeds and the NA ring
@@ -51,12 +108,12 @@
       
       // set orbital speed to random since speed means nothing and we are going for looks
       // for solar systems use more like --> .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
-      .revolution(function(d) {return (20.0/Math.log(isNaN(d.light_years) ? 100000 : d.light_years-3.0)/(randoms[d.FIELD1])*0.08)})
+      .revolution(function(d) {return (10.0/Math.log10(isNaN(d.light_years) ? 100000 : d.light_years-3.0)/(randoms[d.FIELD1])*0.08)})
 
       // distance of the orbit
       // if the value is NA, replace with distance in random array
       // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
-      .totallyrad(function(d) { return isNaN(d.light_years) ? 370+spanrandoms[d.FIELD1]*100 : 1 * Math.log(d.light_years)*40-45})
+      .totallyrad(function(d) { return isNaN(d.light_years) ? 370+spanrandoms[d.FIELD1]*100 : 1 * Math.log10(d.light_years)*90-40})
       
       // restructures the data
       // creates a depth field for each planet (used later to color earth diff from exoplanets)
@@ -70,14 +127,16 @@
       .attr("class", "viz") // of the "viz" class
       .selectAll("g.node") // select all the nodes made in the next couple lines
       .data(orbit.nodes()).enter() // add the data
-      .append("g").attr("class", "node")
       // add a node for each data point
+      .append("g").attr("class", "node")
+      // used for the legend
+      
       // set behavior for cursor going over a node (runs nodeOver function)
       //.on("mouseover", nodeOver)
       .on("mouseover", nodeOver)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
-      
+      .on("click", solarsystem)      
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
       planets.append("circle") // add a circle
@@ -122,30 +181,43 @@
         if (feature == "plnum"){
           var colors = rainbowify(orbit.minPlanetsperSystem(), orbit.maxPlanetsperSystem(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});          
+          var colorsforlegend = colordictionary(orbit.maxPlanetsperSystem(), orbit.minPlanetsperSystem());
+          colorize(colorsforlegend, colors)
         }
         if (feature == "orbper"){
-          var colors = rainbowify(Math.log(orbit.minOrbitalPeriod()), Math.log(orbit.maxOrbitalPeriod()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.orbital_period - orbit.minOrbitalPeriod()))) : "lightgray"});
+          var colors = rainbowify(Math.log10(orbit.minOrbitalPeriod()), Math.log10(orbit.maxOrbitalPeriod()));
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log10(d.orbital_period))) : "lightgray"});
+          var colorsforlegend = colordictionary(Math.round(Math.log10(orbit.maxOrbitalPeriod())), Math.round(Math.log10(orbit.minOrbitalPeriod())));
+          colorize(colorsforlegend, colors, units=" Days", logscale=true)
         }
         if (feature == "pltemp"){
           var colors = rainbowify(orbit.minPlanetTemp(), orbit.maxPlanetTemp(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.planet_temp) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
+          var colorsforlegend = colordictionary(orbit.maxPlanetTemp(), orbit.minPlanetTemp());
+          colorize(colorsforlegend, colors, units=" K")
         }
         if (feature == "rad"){
           var colors = rainbowify(orbit.minPlanetRadius(), orbit.maxPlanetRadius(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.radius) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.radius - orbit.minPlanetRadius())) : "lightgray"});
+          var colorsforlegend = colordictionary(orbit.maxPlanetRadius(), orbit.minPlanetRadius());
+          colorize(colorsforlegend, colors,units=" Earth Radii")
         }
         if (feature == "dist"){
-          var colors = rainbowify(Math.log(orbit.minDistance()), Math.log(orbit.maxDistance()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.light_years - orbit.minDistance()))) : "lightgray"});
+          var colors = rainbowify(Math.log10(orbit.minDistance()), Math.log10(orbit.maxDistance()));
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.floor(Math.log10(d.light_years))) : "lightgray"});
+          var colorsforlegend = colordictionary(Math.floor(Math.log10(orbit.maxDistance())), Math.floor(Math.log10(orbit.minDistance())));
+          colorize(colorsforlegend, colors, units=" Light-Years", logscale=true)
         }
         if (feature == "discyear"){
           var colors = rainbowify(orbit.minDiscoveryYear(), orbit.maxDiscoveryYear(), reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.discovery_year) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.discovery_year - orbit.minDiscoveryYear()) : "lightgray"});        
+          var colorsforlegend = colordictionary(orbit.maxDiscoveryYear(), orbit.minDiscoveryYear());
+          colorize(colorsforlegend, colors)
         }
         if (feature == "discmeth"){
           var colors = rainbowify(0, Object.keys(planetDiscMethods).length-1, reverse=true);
           d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? d.discovery_method == "NA" ? "black": colors.colourAt(planetDiscMethods[d.discovery_method]) : "lightgray"});
+          colorize(planetDiscMethods, colors)
         }
       }
       // start the animation
@@ -216,20 +288,35 @@
 
           d3.select("h2 span").selectAll("p").remove()
       }
+
+      function solarsystem(d){
+
+        var starName = ''
+        if (typeof(Storage)!=="undefined"){
+          sessionStorage.setItem("starName", d.star_name);
+        }
+        event.preventDefault()
+        d3.selectAll('body').fadeOut(1000, window.location.href = "index-solarsystem.html")
+
+      }
+
+
     }
   </script>
   
   <!-- run the makeViz() code on page load -->
   <body onload=makeViz()>
     <h2><span></span></h2>
-      <!-- add the star background -->
-      <div class="stars"></div>
-      <!-- add twinkling -->
-      <!-- <div class="twinkling"></div> -->
-      <div id="viz" align="center" align="top"> <!-- Place the viz here -->
-        <svg id="kevin"></svg> <!-- Place the svg here -->
-        <div id="buttons"></div> <!-- Place the buttons here -->
-      </div>
+    <!-- add the star background -->
+    <div class="stars"></div>
+    <!-- add twinkling -->
+    <div class="twinkling"></div>
+    <div id="viz" align="center" align="top"> <!-- Place the viz here -->
+      <svg id="kevin"></svg> <!-- Place the svg here -->
+      <div id="buttons"></div> <!-- Place the buttons here -->
+      <div id ="result"></div>
+    </div>
+    <div id="container"></div>
   </body>
   <footer>
   </footer>
