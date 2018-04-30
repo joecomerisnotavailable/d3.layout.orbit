@@ -94,23 +94,24 @@
         // set the radius of the circle
         // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*2+1 : 48 })
+        .delay(function(d,i){console.log(i,d); return i * 900 })
         // fill the circle blue if it's the earth ("root" of the data), white otherwise
-        .style("fill", function(d) {
+        .transition().duration(1000).style("fill", function(d) {
         if (d.depth == 0){
           return "#FFFF00"
         } else {
           return "white"
         }
       })
-        .style("stroke", function(d) {
+        .transition().duration(1000).style("stroke", function(d) {
         if (d.depth == 0){
           return "white"
         } else {
           return "lightgray"
         }})
-        .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
-        .style("opacity", function(d) {return d.depth == 0 ? 0.5 : 1})
-        .attr("id", "colorplanet");
+        .transition().duration(1000).style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
+        .transition().duration(1000).style("opacity", function(d) {return d.depth == 0 ? 0.5 : 1})
+        .transition().duration(1000).attr("id", "colorplanet");
       // planets.filter(function(d) { return d.radius  > 2})
       //   .append("circle")     
       //   .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 1.5 })
