@@ -62,7 +62,7 @@
       // distance of the orbit
       // if the value is NA, replace with distance in random array
       // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
-      .totallyrad(function(d) { return isNaN(d.semi_major) ? 370+spanrandoms[d.FIELD1]*50 : 1 * Math.log(d.semi_major*100)*40-45})
+      .totallyrad(function(d) { return isNaN(d.semi_major) ? 370+spanrandoms[d.FIELD1]*200 : 1 * (d.semi_major*100)*40-45})
       
       // restructures the data
       // creates a depth field for each planet (used later to color earth diff from exoplanets)
@@ -91,7 +91,7 @@
       planets.append("circle") // add a circle
         // set the radius of the circle
         // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
-        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*5+1 : 48 })
+        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*2+1 : 48 })
         // fill the circle blue if it's the earth ("root" of the data), white otherwise
         .style("fill", function(d) {
         if (d.depth == 0){
@@ -221,7 +221,7 @@
               } else if (d.radius == "NA") {
               return 5+1
           } else {
-              return d.radius*5+1
+              return d.radius*2+1
               }})
             .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
             .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
@@ -264,7 +264,7 @@
           } else if (d.radius == "NA") {
           return 5+1
       } else {
-          return d.radius*5+1
+          return d.radius*2+1
           }})
          .style("fill", function(d) {return d.depth == 0 ? "#FFFF00" : "white"})
          .style("stroke", function(d) {return d.depth == 0 ? "white" : "lightgray"})
