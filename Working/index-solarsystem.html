@@ -84,6 +84,8 @@
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
 
+      .on("click", habitable)
+
 
       
       // add a circle at the data points
@@ -197,42 +199,13 @@
         // stop the animation
         orbit.stop();
 
-        if ((d.depth != 0) && (d.star_temp != 'NA') && (d.star_radius != 'NA')){
-          hab.push((+d.star_temp*(+d.star_radius))/25)
-        } else {
-          hab.push(random)
-        }
-
-        console.log(hab)
-
-        // draw a black ring around each planet
-
-
-        // d3.select(this)
-        // .select("circle")
-        // .style("stroke", "black")
-        // .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1+1 : d.radius*0.5+1+1 : 50+2 })
-        // .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 0});    
-    
-        d3.selectAll("g.node")
-            .select("circle")
-            .transition()
-            .attr("r", function(d) {
-          if (d.depth == 0) {
-                return hab[0] //TODO: Get the last element. 
-              } else if (d.radius == "NA") {
-              return 5+1
-          } else {
-              return d.radius*2+1
-              }})
-            .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
-            .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
-            .style("stroke-width", function(d) {return d.depth == 0 ? 50 : 3});
+      
         if (!d.radius){
           d3.select("h2 span")
           //.append("text")
           //.text(function(d,i){return d.star_name + d.star_temp})
           .text("")
+          .append("p").text("Click on this star to go back to the outer view.").style("color", "yellow")
           // .append("p").text("Planet Name: " + d.key).style("color", "white")
           // .append("p").text("Planet Temperature (K): " + d.planet_temp).style("color", "white")
           // .append("p").text("Planet Radius (Earth radii): " + 1).style("color", "white")
@@ -242,6 +215,7 @@
           //.append("text")
           //.text(function(d,i){return d.star_name + d.star_temp})
           .text("")
+          .append("p").text("Click on this planet to see if it lies within the habitable zone.").style("color", "yellow")
           .append("p").text("Planet Name: " + d.key).style("color", "white")
           .append("p").text("Distance From Earth (Light-years): " + d.light_years).style("color", "white")          
           .append("p").text("Planet Temperature (K): " + d.planet_temp).style("color", "white")
@@ -273,6 +247,36 @@
          .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5});   
 
           d3.select("h2 span").selectAll("p").remove()
+      }
+
+
+
+      function habitable(d) {
+        if ((d.depth != 0) && (d.star_temp != 'NA') && (d.star_radius != 'NA')){
+          hab.push((+d.star_temp*(+d.star_radius))/25)
+        } else if (d.depth == 0){
+          d3.selectAll('body').fadeOut(1000, window.location.href = "index.html")
+        } else {
+          hab.push(random)
+        }
+
+        console.log(hab)
+
+        d3.selectAll("g.node")
+            .select("circle")
+            .transition()
+            .attr("r", function(d) {
+          if (d.depth == 0) {
+                return hab[hab.length - 1] //TODO: Get the last element. 
+              } else if (d.radius == "NA") {
+              return 5+1
+          } else {
+              return d.radius*2+1
+              }})
+            .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
+            .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
+            .style("stroke-width", function(d) {return d.depth == 0 ? 50 : 3})
+
       }
     }
   </script>
