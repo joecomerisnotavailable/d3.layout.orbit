@@ -12,6 +12,7 @@
   <script src="gradients.js"></script>
   <script>
 
+    var name = sessionStorage.getItem("starName")
     // this function sends the data to the draw orbit function
     // ran onload of page
     function makeViz() {
@@ -272,6 +273,7 @@
       <div id="viz" align="center" align="top"> <!-- Place the viz here -->
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
+        <div id="result"></div>
       </div>
   </body>
   <footer>
