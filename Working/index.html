@@ -136,8 +136,7 @@
       .on("mouseover", nodeOver)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
-      .on("click", clickedplanet)
-      
+      .on("click", solarsystem)      
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
       planets.append("circle") // add a circle
@@ -290,8 +289,17 @@
           d3.select("h2 span").selectAll("p").remove()
       }
 
-      function clickedplanet(d) {
-          // console.log(d.star_name)
+      function solarsystem(d){
+        var name = d.star_name;
+        console.log(name)
+
+        var starName = ''
+        if (typeof(Storage)!=="undefined"){
+          sessionStorage.setItem("starName", d.star_name);
+        }
+        event.preventDefault()
+        d3.selectAll('body').fadeOut(1000, window.location.href = "index-solarsystem.html")
+
       }
 
 
@@ -308,6 +316,7 @@
     <div id="viz" align="center" align="top"> <!-- Place the viz here -->
       <svg id="kevin"></svg> <!-- Place the svg here -->
       <div id="buttons"></div> <!-- Place the buttons here -->
+      <div id ="result"></div>
     </div>
     <div id="container"></div>
   </body>
