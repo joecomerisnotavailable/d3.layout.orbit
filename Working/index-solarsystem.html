@@ -15,8 +15,10 @@
     // this function sends the data to the draw orbit function
     // ran onload of page
     function makeViz() {
-      d3.json("../exoplanet_data/stars/KOI-351.json", function(data) {drawOrbit(data)});
+      d3.json("../exoplanet_data/stars/"+name+".json", function(data) {drawOrbit(data)});
     }
+
+
 
     planetDiscMethods = {"Imaging":0, "Transit":1, "Orbital Brightness Modulation":2, "Radial Velocity":3, "Transit Timing Variations":4, 
                              "Eclipse Timing Variations":5, "Astrometry":6, "Pulsation Timing Variations":7, "Microlensing":8, "Pulsar Timing":9}
@@ -78,7 +80,8 @@
       .on("mouseover", nodeOver)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
-      .on("click", clickedplanet)
+
+
       
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
@@ -188,11 +191,13 @@
         // stop the animation
         orbit.stop();
         // draw a black ring around each planet
-        d3.select(this)
-        .select("circle")
-        .style("stroke", "black")
-        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1+1 : d.radius*0.5+1+1 : 50+2 })
-        .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 0});    
+
+
+        // d3.select(this)
+        // .select("circle")
+        // .style("stroke", "black")
+        // .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1+1 : d.radius*0.5+1+1 : 50+2 })
+        // .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 0});    
     
     d3.selectAll("g.node")
         .select("circle")
@@ -253,10 +258,6 @@
          .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 1});   
 
           d3.select("h2 span").selectAll("p").remove()
-      }
-
-      function clickedplanet(d) {
-          console.log(d.star_name)
       }
     }
   </script>
