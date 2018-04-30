@@ -6,7 +6,7 @@
   </head>
   <!-- Place the javascript source code links here -->
   <script src="../src/d3.min.js"></script>
-  <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
+  <script src="d3.layout.orbit.ss.js" charset="utf-8" type="text/javascript"></script>
   <script src="../src/rainbowvis.js"></script>
   <script src="../src/svg-pan-zoom.js"></script>
   <script src="gradients.js"></script>
@@ -41,7 +41,7 @@
     var randoms = Array(3719); // for planet speeds
     var spanrandoms = Array(3719); // for NaN lightyears to create a span of the ring
     var shouldbepaused = false;
-    var random = Math.floor(Math.random()*500);
+    var random = Math.floor(Math.random()*1000);
     // populate the arrays
     for(var i = 0; i < randoms.length; i++){
       randoms[i] = Math.random()*0.5 + 0.15; // speeds are between 0.15 and .35
@@ -57,12 +57,12 @@
       
       // set orbital speed to random since speed means nothing and we are going for looks
       // for solar systems use more like --> .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
-      .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/500})
+      .revolution(function(d) {return d.orbital_period == "NA" ? 1 : 1/(d.orbital_period/50)})
 
       // distance of the orbit
       // if the value is NA, replace with distance in random array
       // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
-      .totallyrad(function(d) { return isNaN(d.light_years) ? 370+spanrandoms[d.FIELD1]*100 : 1 * Math.log(d.light_years)*40-45})
+      .totallyrad(function(d) { return isNaN(d.semi_major) ? 370+spanrandoms[d.FIELD1]*50 : 1 * Math.log(d.semi_major*100)*40-45})
       
       // restructures the data
       // creates a depth field for each planet (used later to color earth diff from exoplanets)
@@ -91,7 +91,7 @@
       planets.append("circle") // add a circle
         // set the radius of the circle
         // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
-        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*10+1 : 48 })
+        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*5+1 : 48 })
         // fill the circle blue if it's the earth ("root" of the data), white otherwise
         .style("fill", function(d) {
         if (d.depth == 0){
@@ -197,11 +197,10 @@
         // stop the animation
         orbit.stop();
 
-        if (d.star_temp != 'NA' && d.star_radius != 'NA'){
+        if ((d.star_temp != 'NA') && (d.star_radius != 'NA')){
           hab.push((+d.star_temp*(+d.star_radius))/10)
-        } else {
-          hab.push(random)
         }
+
         console.log(hab)
 
         // draw a black ring around each planet
@@ -218,11 +217,11 @@
             .transition()
             .attr("r", function(d) {
           if (d.depth == 0) {
-                return hab[0]
+                return hab[0] //TODO: Get the last element. 
               } else if (d.radius == "NA") {
               return 5+1
           } else {
-              return d.radius*10+1
+              return d.radius*5+1
               }})
             .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
             .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
@@ -265,7 +264,7 @@
           } else if (d.radius == "NA") {
           return 5+1
       } else {
-          return d.radius*10+1
+          return d.radius*5+1
           }})
          .style("fill", function(d) {return d.depth == 0 ? "#FFFF00" : "white"})
          .style("stroke", function(d) {return d.depth == 0 ? "white" : "lightgray"})
