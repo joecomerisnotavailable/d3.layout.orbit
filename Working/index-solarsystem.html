@@ -1,6 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <link href="exoplanets.css" type="text/css" rel="stylesheet">
+    <link href="solar_system.css" type="text/css" rel="stylesheet">
     <title>Orbit Layout Modes</title>
     <meta charset="utf-8" />
   </head>
@@ -122,13 +122,13 @@
       //   .style("stroke-width", 0.25)
       //   .attr("id", "gradientplanet");
 
-      d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Planet Radius").on("click", function() {colorbyfeature("rad")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Number of Planets in System").on("click", function() {colorbyfeature("plnum")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Orbital Period").on("click", function() {colorbyfeature("orbper")})
-      d3.select("#buttons").append("button").attr("class","btn").html("Discovery Year").on("click", function() {colorbyfeature("discyear")})
-      d3.select("#buttons").append("button").attr("class","btn").attr("id", "lastcolorbtn").html("Discovery Method").on("click", function() {colorbyfeature("discmeth")})
+      // d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
+      // d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
+      // d3.select("#buttons").append("button").attr("class","btn").html("Planet Radius").on("click", function() {colorbyfeature("rad")})
+      // d3.select("#buttons").append("button").attr("class","btn").html("Number of Planets in System").on("click", function() {colorbyfeature("plnum")})
+      // d3.select("#buttons").append("button").attr("class","btn").html("Orbital Period").on("click", function() {colorbyfeature("orbper")})
+      // d3.select("#buttons").append("button").attr("class","btn").html("Discovery Year").on("click", function() {colorbyfeature("discyear")})
+      // d3.select("#buttons").append("button").attr("class","btn").attr("id", "lastcolorbtn").html("Discovery Method").on("click", function() {colorbyfeature("discmeth")})
 
       createGradients();
 
@@ -139,6 +139,8 @@
         .attr("transform", function(d) {
           return "translate(" + d.x +"," + d.y +")"}); // move to the new location
       });
+
+
       
       // color function
       function colorbyfeature(feature){
@@ -179,7 +181,7 @@
       function pause(){
         orbit.stop();
         shouldbepaused = true;
-        d3.select("#buttons").append("button").attr("class","btn").attr("id", "startbutton").html("Start Animation").on("click", start);
+        d3.select("#buttons").append("button").attr("class","btn").attr("id", "startbutton").html("Resume").on("click", start);
         d3.select("#pausebutton").remove();
       }
 
@@ -187,7 +189,7 @@
       function start(){
         orbit.start();
         shouldbepaused = false;
-        d3.select("#buttons").append("button").attr("class","btn").attr("id", "pausebutton").html("Pause Animation").on("click", pause);
+        d3.select("#buttons").append("button").attr("class","btn").attr("id", "pausebutton").html("Pause").on("click", pause);
         d3.select("#startbutton").remove();        
       }
 
@@ -216,7 +218,7 @@
           //.append("text")
           //.text(function(d,i){return d.star_name + d.star_temp})
           .text("")
-          .append("p").text("Click on this planet to see if it lies within the habitable zone.").style("color", "yellow")
+          .append("p").text("Click on this planet for the habitable zone.").style("color", "yellow")
           .append("p").text("Planet Name: " + d.key).style("color", "white")
           .append("p").text("Distance From Earth (Light-years): " + d.light_years).style("color", "white")          
           .append("p").text("Planet Temperature (K): " + d.planet_temp).style("color", "white")
@@ -246,7 +248,8 @@
           }})
          .style("fill", function(d) {return d.depth == 0 ? "orange" : "white"})
          .style("stroke", function(d) {return d.depth == 0 ? "white" : "lightgray"})
-         .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5});   
+         .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
+         .style("opacity", function(d) {return d.depth == 0 ? 1 : 1});   
 
           d3.select("h2 span").selectAll("p").remove()
       }
@@ -279,6 +282,7 @@
             .style("fill", function(d) {return d.depth == 0 ? "black" : "white"})
             .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
             .style("stroke-width", function(d) {return d.depth == 0 ? 50 : 3})
+            .style("opacity", function(d) {return d.depth == 0 ? 0.7 : 1})
 
       }
     }
