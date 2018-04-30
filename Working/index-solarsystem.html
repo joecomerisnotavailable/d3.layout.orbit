@@ -90,7 +90,7 @@
       
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
-      planets.append("circle") // add a circle
+      planets.append("circle").transition().duration(1000) // add a circle
         // set the radius of the circle
         // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*2+1 : 48 })
@@ -143,31 +143,31 @@
       function colorbyfeature(feature){
         if (feature == "plnum"){
           var colors = rainbowify(orbit.minPlanetsperSystem(), orbit.maxPlanetsperSystem(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});          
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});          
         }
         if (feature == "orbper"){
           var colors = rainbowify(Math.log(orbit.minOrbitalPeriod()), Math.log(orbit.maxOrbitalPeriod()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.orbital_period - orbit.minOrbitalPeriod()))) : "lightgray"});
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.orbital_period - orbit.minOrbitalPeriod()))) : "lightgray"});
         }
         if (feature == "pltemp"){
           var colors = rainbowify(orbit.minPlanetTemp(), orbit.maxPlanetTemp(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.planet_temp) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.planet_temp) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
         }
         if (feature == "rad"){
           var colors = rainbowify(orbit.minPlanetRadius(), orbit.maxPlanetRadius(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.radius) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.radius - orbit.minPlanetRadius())) : "lightgray"});
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.radius) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.radius - orbit.minPlanetRadius())) : "lightgray"});
         }
         if (feature == "dist"){
           var colors = rainbowify(Math.log(orbit.minDistance()), Math.log(orbit.maxDistance()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.light_years - orbit.minDistance()))) : "lightgray"});
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log(d.light_years - orbit.minDistance()))) : "lightgray"});
         }
         if (feature == "discyear"){
           var colors = rainbowify(orbit.minDiscoveryYear(), orbit.maxDiscoveryYear(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.discovery_year) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.discovery_year - orbit.minDiscoveryYear()) : "lightgray"});        
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.discovery_year) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.discovery_year - orbit.minDiscoveryYear()) : "lightgray"});        
         }
         if (feature == "discmeth"){
           var colors = rainbowify(0, Object.keys(planetDiscMethods).length-1, reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? d.discovery_method == "NA" ? "black": colors.colourAt(planetDiscMethods[d.discovery_method]) : "lightgray"});
+          d3.selectAll("#colorplanet").transition().duration(1000).style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? d.discovery_method == "NA" ? "black": colors.colourAt(planetDiscMethods[d.discovery_method]) : "lightgray"});
         }
       }
       // start the animation
@@ -234,6 +234,7 @@
           // remove the border from the circle
          d3.selectAll("g.node > circle")
          .transition()
+         .duration(1000)
          .attr("r", function(d) {
       if (d.depth == 0) {
             return 48
@@ -265,6 +266,7 @@
         d3.selectAll("g.node")
             .select("circle")
             .transition()
+            .duration(2000)
             .attr("r", function(d) {
           if (d.depth == 0) {
                 return hab[hab.length - 1] //TODO: Get the last element. 
@@ -273,7 +275,7 @@
           } else {
               return d.radius*2+1
               }})
-            .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
+            .style("fill", function(d) {return d.depth == 0 ? "black" : "white"})
             .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
             .style("stroke-width", function(d) {return d.depth == 0 ? 50 : 3})
 
