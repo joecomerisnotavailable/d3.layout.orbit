@@ -13,6 +13,8 @@
   <script>
 
     var name = sessionStorage.getItem("starName")
+
+    var hab = []
     // this function sends the data to the draw orbit function
     // ran onload of page
     function makeViz() {
@@ -55,7 +57,7 @@
       
       // set orbital speed to random since speed means nothing and we are going for looks
       // for solar systems use more like --> .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
-      .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/1000})
+      .revolution(function(d) {return d.orbital_period == "NA" ? 1 : d.orbital_period/500})
 
       // distance of the orbit
       // if the value is NA, replace with distance in random array
@@ -104,18 +106,18 @@
         } else {
           return "lightgray"
         }})
-        .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 1})
+        .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
         .style("opacity", function(d) {return d.depth == 0 ? 0.5 : 1})
         .attr("id", "colorplanet");
-      planets.filter(function(d) { return d.radius  > 2})
-        .append("circle")     
-        .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 1.5 })
-        // fill the circle blue if it's the earth ("root" of the data), white otherwise
-        .style("fill", function(d) {return d.depth == 0 ? "blue" : "url(#gradientRadial-" + d.FIELD1 + ")";})
-        .style("fill-opacity", 0.5)
-        .style("stroke", function(d) {return d.depth == 0 ? "black" : "transparent"})
-        .style("stroke-width", 0.25)
-        .attr("id", "gradientplanet");
+      // planets.filter(function(d) { return d.radius  > 2})
+      //   .append("circle")     
+      //   .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 1.5 })
+      //   // fill the circle blue if it's the earth ("root" of the data), white otherwise
+      //   .style("fill", function(d) {return d.depth == 0 ? "blue" : "url(#gradientRadial-" + d.FIELD1 + ")";})
+      //   .style("fill-opacity", 0.5)
+      //   .style("stroke", function(d) {return d.depth == 0 ? "black" : "transparent"})
+      //   .style("stroke-width", 0.25)
+      //   .attr("id", "gradientplanet");
 
       d3.select("#buttons").append("button").attr("class","btn").html("Distance from Earth").on("click", function() {colorbyfeature("dist")})
       d3.select("#buttons").append("button").attr("class","btn").html("Planet Temperature").on("click", function() {colorbyfeature("pltemp")})
@@ -188,9 +190,20 @@
 
       // sets the behavior for when the cursor goes over a node (planet)
       function nodeOver(d) {
+
+        // var n.array = []
+        // n.array.push(d.star)
         // var zoom = svgPanZoom('#kevin');
         // stop the animation
         orbit.stop();
+
+        if (d.star_temp != 'NA' && d.star_radius != 'NA'){
+          hab.push((+d.star_temp*(+d.star_radius))/10)
+        } else {
+          hab.push(random)
+        }
+        console.log(hab)
+
         // draw a black ring around each planet
 
 
@@ -200,20 +213,20 @@
         // .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1+1 : d.radius*0.5+1+1 : 50+2 })
         // .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 0});    
     
-    d3.selectAll("g.node")
-        .select("circle")
-        .transition()
-        .attr("r", function(d) {
-      if (d.depth == 0) {
-            return random
-          } else if (d.radius == "NA") {
-          return 5+1
-      } else {
-          return d.radius*10+1
-          }})
-        .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
-        .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
-        .style("stroke-width", function(d) {return d.depth == 0 ? 30 : 3});
+        d3.selectAll("g.node")
+            .select("circle")
+            .transition()
+            .attr("r", function(d) {
+          if (d.depth == 0) {
+                return hab[0]
+              } else if (d.radius == "NA") {
+              return 5+1
+          } else {
+              return d.radius*10+1
+              }})
+            .style("fill", function(d) {return d.depth == 0 ? "none" : "white"})
+            .style("stroke", function(d) {return d.depth == 0 ? "green" : "lightgray"})
+            .style("stroke-width", function(d) {return d.depth == 0 ? 30 : 3});
         if (!d.radius){
           d3.select("h2 span")
           //.append("text")
@@ -256,7 +269,7 @@
           }})
          .style("fill", function(d) {return d.depth == 0 ? "#FFFF00" : "white"})
          .style("stroke", function(d) {return d.depth == 0 ? "white" : "lightgray"})
-         .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 1});   
+         .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5});   
 
           d3.select("h2 span").selectAll("p").remove()
       }
@@ -269,7 +282,7 @@
       <!-- add the star background -->
       <div class="stars"></div>
       <!-- add twinkling -->
-      <!-- <div class="twinkling"></div> -->
+      <div class="twinkling">
       <div id="viz" align="center" align="top"> <!-- Place the viz here -->
         <svg id="kevin"></svg> <!-- Place the svg here -->
         <div id="buttons"></div> <!-- Place the buttons here -->
