@@ -98,7 +98,7 @@
         // fill the circle blue if it's the earth ("root" of the data), white otherwise
         .transition().duration(1000).style("fill", function(d) {
         if (d.depth == 0){
-          return "#FFFF00"
+          return "orange"
         } else {
           return "white"
         }
@@ -110,7 +110,7 @@
           return "lightgray"
         }})
         .transition().duration(1000).style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
-        .transition().duration(1000).style("opacity", function(d) {return d.depth == 0 ? 0.5 : 1})
+        .transition().duration(1000).style("opacity", function(d) {return d.depth == 0 ? 1 : 1})
         .transition().duration(1000).attr("id", "colorplanet");
       // planets.filter(function(d) { return d.radius  > 2})
       //   .append("circle")     
