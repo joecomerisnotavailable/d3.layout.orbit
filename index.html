@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
   </head>
   <!-- Place the javascript source code links here -->
-  <script src="../src/d3.min.js"></script>
+  <script src="src/d3.min.js"></script>
   <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
-  <script src="../src/rainbowvis.js"></script>
-  <script src="../src/svg-pan-zoom.js"></script>
+  <script src="src/rainbowvis.js"></script>
+  <script src="src/svg-pan-zoom.js"></script>
   <script src="gradients.js"></script>
   <script>
 
     // this function sends the data to the draw orbit function
     // ran onload of page
     function makeViz() {
-      d3.json("../exoplanet_data/planets.json", function(data) {drawOrbit(data)});
+      d3.json("exoplanet_data/planets.json", function(data) {drawOrbit(data)});
     }
 
     planetDiscMethods = {"Imaging":0, "Transit":1, "Orbital Brightness Modulation":2, "Radial Velocity":3, "Transit Timing Variations":4, 
