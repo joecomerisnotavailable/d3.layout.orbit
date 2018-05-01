@@ -75,7 +75,8 @@
           label.innerHTML = " " + (10**namedict[key]).toString() + units;
           color=usedict[namedict[key]]
         } else {
-          label.innerHTML = " " + key + units;
+          roundedkey = isNaN(key) ? key : Math.round(key);
+          label.innerHTML = " " + roundedkey + units;
         }
         
         box.className = "box";
