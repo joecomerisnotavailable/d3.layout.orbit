@@ -1,12 +1,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <link href="solar_system.css" type="text/css" rel="stylesheet">
+    <link href="exoplanets.css" type="text/css" rel="stylesheet">
     <title>Orbit Layout Modes</title>
     <meta charset="utf-8" />
   </head>
   <!-- Place the javascript source code links here -->
   <script src="../src/d3.min.js"></script>
-  <script src="d3.layout.orbit.ss.js" charset="utf-8" type="text/javascript"></script>
+  <script src="d3.layout.orbit.js" charset="utf-8" type="text/javascript"></script>
   <script src="../src/rainbowvis.js"></script>
   <script src="../src/svg-pan-zoom.js"></script>
   <script src="gradients.js"></script>
@@ -62,7 +62,7 @@
       // distance of the orbit
       // if the value is NA, replace with distance in random array
       // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
-      .totallyrad(function(d) { return isNaN(d.semi_major) ? 370+spanrandoms[d.FIELD1]*200 : 1 * (d.semi_major*100)*40-45})
+      .totallyrad(function(d) { return isNaN(d.light_years) ? 370+spanrandoms[d.FIELD1]*200 : 1 * Math.log(d.light_years*100)*40-45})
       
       // restructures the data
       // creates a depth field for each planet (used later to color earth diff from exoplanets)
@@ -90,28 +90,28 @@
       
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
-      planets.append("circle").transition().duration(1000) // add a circle
+      planets.append("circle").transition().duration(1000)// add a circle
         // set the radius of the circle
         // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 5+1 : d.radius*2+1 : 48 })
         .delay(function(d,i){console.log(i,d); return i * 900 })
         // fill the circle blue if it's the earth ("root" of the data), white otherwise
-        .transition().duration(1000).style("fill", function(d) {
+        .style("fill", function(d) {
         if (d.depth == 0){
           return "orange"
         } else {
           return "white"
         }
       })
-        .transition().duration(1000).style("stroke", function(d) {
+        .style("stroke", function(d) {
         if (d.depth == 0){
           return "white"
         } else {
           return "lightgray"
         }})
-        .transition().duration(1000).style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
-        .transition().duration(1000).style("opacity", function(d) {return d.depth == 0 ? 1 : 1})
-        .transition().duration(1000).attr("id", "colorplanet");
+        .style("stroke-width", function(d) {return d.depth == 0 ? 0 : 5})
+        .style("opacity", function(d) {return d.depth == 0 ? 1 : 1})
+        .attr("id", "colorplanet");
       // planets.filter(function(d) { return d.radius  > 2})
       //   .append("circle")     
       //   .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 1.5 })
