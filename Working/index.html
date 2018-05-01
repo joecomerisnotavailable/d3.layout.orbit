@@ -136,23 +136,26 @@
       .on("mouseover", nodeOver)
       // set behavior for cursor leaving a node (runs nodeOut function)
       .on("mouseout", nodeOut)
-      .on("click", solarsystem)      
+      .on("click", solarsystem)
+
+
       // add a circle at the data points
       var planets = d3.selectAll("g.node"); // sellect all the nodes
       planets.append("circle") // add a circle
         // set the radius of the circle
         // if radius is NA, return 1, if there is a radius return radius*5, and if there is no radius value return 5
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 48 })
-        // fill the circle blue if it's the earth ("root" of the data), white otherwise
-        .style("fill", function(d) {return d.depth == 0 ? "blue" : "white";})
+        // fill the circle orangered if it's the earth ("root" of the data), white otherwise
+        .style("fill", function(d) {return d.depth == 0 ? "orangered" : "white";})
         .style("stroke", function(d) {return d.depth == 0 ? "black" : "transparent"})
         .style("stroke-width", function(d) {return d.depth == 0 ? 90 : 0.125})
         .attr("id", "colorplanet");
+
       planets.filter(function(d) { return d.radius  > 2})
         .append("circle")     
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1 : d.radius*0.5+1 : 1.5 })
-        // fill the circle blue if it's the earth ("root" of the data), white otherwise
-        .style("fill", function(d) {return d.depth == 0 ? "blue" : "url(#gradientRadial-" + d.FIELD1 + ")";})
+        // fill the circle orangered if it's the earth ("root" of the data), white otherwise
+        .style("fill", function(d) {return d.depth == 0 ? "orangered" : "url(#gradientRadial-" + d.FIELD1 + ")";})
         .style("fill-opacity", 0.5)
         .style("stroke", function(d) {return d.depth == 0 ? "black" : "transparent"})
         .style("stroke-width", 0.25)
@@ -180,43 +183,43 @@
       function colorbyfeature(feature){
         if (feature == "plnum"){
           var colors = rainbowify(orbit.minPlanetsperSystem(), orbit.maxPlanetsperSystem(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.pl_pnum) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});          
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? isNaN(d.pl_pnum) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.pl_pnum - orbit.minPlanetsperSystem()) : "lightgray"});          
           var colorsforlegend = colordictionary(orbit.maxPlanetsperSystem(), orbit.minPlanetsperSystem());
           colorize(colorsforlegend, colors)
         }
         if (feature == "orbper"){
           var colors = rainbowify(Math.log10(orbit.minOrbitalPeriod()), Math.log10(orbit.maxOrbitalPeriod()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log10(d.orbital_period))) : "lightgray"});
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? isNaN(d.orbital_period) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(Math.log10(d.orbital_period))) : "lightgray"});
           var colorsforlegend = colordictionary(Math.round(Math.log10(orbit.maxOrbitalPeriod())), Math.round(Math.log10(orbit.minOrbitalPeriod())));
           colorize(colorsforlegend, colors, units=" Days", logscale=true)
         }
         if (feature == "pltemp"){
           var colors = rainbowify(orbit.minPlanetTemp(), orbit.maxPlanetTemp(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.planet_temp) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? isNaN(d.planet_temp) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.planet_temp - orbit.minPlanetTemp())) : "lightgray"});
           var colorsforlegend = colordictionary(orbit.maxPlanetTemp(), orbit.minPlanetTemp());
           colorize(colorsforlegend, colors, units=" K")
         }
         if (feature == "rad"){
           var colors = rainbowify(orbit.minPlanetRadius(), orbit.maxPlanetRadius(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.radius) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.radius - orbit.minPlanetRadius())) : "lightgray"});
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? isNaN(d.radius) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.round(d.radius - orbit.minPlanetRadius())) : "lightgray"});
           var colorsforlegend = colordictionary(orbit.maxPlanetRadius(), orbit.minPlanetRadius());
           colorize(colorsforlegend, colors,units=" Earth Radii")
         }
         if (feature == "dist"){
           var colors = rainbowify(Math.log10(orbit.minDistance()), Math.log10(orbit.maxDistance()));
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.floor(Math.log10(d.light_years))) : "lightgray"});
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? isNaN(d.light_years) ? d3.rgb("darkgray").darker(5): colors.colourAt(Math.floor(Math.log10(d.light_years))) : "lightgray"});
           var colorsforlegend = colordictionary(Math.floor(Math.log10(orbit.maxDistance())), Math.floor(Math.log10(orbit.minDistance())));
           colorize(colorsforlegend, colors, units=" Light-Years", logscale=true)
         }
         if (feature == "discyear"){
           var colors = rainbowify(orbit.minDiscoveryYear(), orbit.maxDiscoveryYear(), reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? isNaN(d.discovery_year) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.discovery_year - orbit.minDiscoveryYear()) : "lightgray"});        
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? isNaN(d.discovery_year) ? d3.rgb("darkgray").darker(5): colors.colourAt(d.discovery_year - orbit.minDiscoveryYear()) : "lightgray"});        
           var colorsforlegend = colordictionary(orbit.maxDiscoveryYear(), orbit.minDiscoveryYear());
           colorize(colorsforlegend, colors)
         }
         if (feature == "discmeth"){
           var colors = rainbowify(0, Object.keys(planetDiscMethods).length-1, reverse=true);
-          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "blue" : d.depth == 1 ? d.discovery_method == "NA" ? "black": colors.colourAt(planetDiscMethods[d.discovery_method]) : "lightgray"});
+          d3.selectAll("#colorplanet").style("fill", function(d) {return d.depth == 0 ? "orangered" : d.depth == 1 ? d.discovery_method == "NA" ? "black": colors.colourAt(planetDiscMethods[d.discovery_method]) : "lightgray"});
           colorize(planetDiscMethods, colors)
         }
       }
@@ -247,6 +250,7 @@
         // draw a black ring around each planet
         d3.select(this)
         .select("circle")
+        //.style("fill",function(d) {return d.depth == 0 ? "url(#image)"})
         .style("stroke", "black")
         .attr("r", function(d) {return d.radius ? d.radius == "NA" ? 0.5+1+1 : d.radius*0.5+1+1 : 50+2 })
         .style("stroke-width", function(d) {return d.depth == 0 ? 85 : 0});    
@@ -312,7 +316,12 @@
     <!-- add twinkling -->
     <div class="twinkling"></div>
     <div id="viz" align="center" align="top"> <!-- Place the viz here -->
-      <svg id="kevin"></svg> <!-- Place the svg here -->
+      <svg id="kevin"> <!-- Place the svg here -->
+        <!-- <defs id="mdef">
+          <pattern id="image">
+            <image x="200" y="200" height="45" width="45" xlink:href="http://pngimg.com/uploads/earth/earth_PNG36.png"></image>
+          </pattern>
+        </defs> --></svg>
       <div id="buttons"></div> <!-- Place the buttons here -->
       <div id ="result"></div>
     </div>
