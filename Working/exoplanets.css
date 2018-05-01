@@ -1,4 +1,5 @@
 /* ============================================================================================== 
+Code for sparkling skies:
 Nick Mkrtchyan
 https://www.facebook.com/sonick.pk
 http://www.Mkrtchyan.zz.mu
@@ -170,6 +171,7 @@ p {
   border: 2px solid;
   z-index: 500;
   color: black;
+  opacity: 0.7;
 }
 
 #container {
@@ -178,7 +180,7 @@ p {
   right: 2%;
   font-size: 16px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  color: white;
+  color: lightgray;
   opacity: 0.7;
   z-index: 500;
 }
