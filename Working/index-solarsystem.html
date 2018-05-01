@@ -63,7 +63,7 @@
       // if the value is NA, replace with distance in random array
       // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
       
-      .totallyrad(function(d) { return isNaN(d.semi_major) ? 200 : Math.log10(d.semi_major*1000)*100 + 48 + d.radius + 3}) //48 for sun radius, + planet radius, + 3 for border
+      .totallyrad(function(d) { return isNaN(d.semi_major) ? 200 : isNaN(d.radius) ? Math.log10(d.semi_major*1000)*100 + 48 + 3 + 5+1 : Math.log10(d.semi_major*1000)*100 + 48 + 3 + d.radius*2+1}) //48 for sun radius, + planet radius, + 3 for border
       
       // restructures the data
       // creates a depth field for each planet (used later to color earth diff from exoplanets)
