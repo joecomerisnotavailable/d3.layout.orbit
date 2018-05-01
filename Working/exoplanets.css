@@ -182,3 +182,7 @@ p {
   opacity: 0.7;
   z-index: 500;
 }
+
+div span{
+  vertical-align: 5.5px;
+}
