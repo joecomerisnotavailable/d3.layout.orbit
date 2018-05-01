@@ -62,13 +62,14 @@
       // distance of the orbit
       // if the value is NA, replace with distance in random array
       // this was done so that there was a spread in these planets, otherwise it looks like a solid ring
-      .totallyrad(function(d) { return isNaN(d.light_years) ? 370+spanrandoms[d.FIELD1]*200 : 1 * Math.log(d.light_years*100)*40-45})
+      
+      .totallyrad(function(d) { return isNaN(d.semi_major) ? 200 : Math.log10(d.semi_major*1000)*100 + 48 + d.radius + 3}) //48 for sun radius, + planet radius, + 3 for border
       
       // restructures the data
       // creates a depth field for each planet (used later to color earth diff from exoplanets)
       // creates a random starting point for the planet
       .nodes(_data);
-
+      
       // add the data to the visualization and set cursor behavior
       // creates a node for each planet
       d3.select("svg") // to the svg part of the page
