@@ -41,7 +41,7 @@
     var randoms = Array(3719); // for planet speeds
     var spanrandoms = Array(3719); // for NaN lightyears to create a span of the ring
     var shouldbepaused = false;
-    var random = Math.floor(Math.random()*1000);
+    var random = Math.floor(Math.random()*140+600);
     // populate the arrays
     for(var i = 0; i < randoms.length; i++){
       randoms[i] = Math.random()*0.5 + 0.15; // speeds are between 0.15 and .35
@@ -259,7 +259,7 @@
 
       function habitable(d) {
         if ((d.depth != 0) && (d.star_temp != 'NA') && (d.star_radius != 'NA')){
-          hab.push((+d.star_temp*(+d.star_radius))/25)
+          hab.push(Math.log10(+d.star_temp*(+d.star_radius))*100)
         } else if (d.depth == 0){
           d3.selectAll('body').fadeOut(1000, window.location.href = "index.html")
         } else {
