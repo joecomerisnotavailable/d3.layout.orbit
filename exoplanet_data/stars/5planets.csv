@@ -1,0 +1,6 @@
+"","key","star_name","planet_letter","discovery_method","pl_pnum","orbital_period","semi_major","orbital_eccentricity","star_temp","star_radius","planet_temp","radius","discovery_year","light_years"
+"1","HD 100546_b","HD 100546","b","Imaging",1,NA,53,NA,10500,NA,NA,77.342,2014,316.37132
+"2","GQ Lup_b","GQ Lup","b","Imaging",1,NA,100,NA,NA,NA,2650,33.6,2004,453.35684
+"3","CT Cha_b","CT Cha","b","Imaging",1,NA,440,NA,NA,NA,2600,24.66,2007,538.1574
+"4","WASP-79_b","WASP-79","b","Transit",1,3.6623866,0.0535,0,6600,1.53,1900,23.43,2012,782.7744
+"5","HAT-P-67_b","HAT-P-67","b","Transit",1,4.8101025,0.06505,0,6406,2.55,1903,23.371,2017,1043.6992
